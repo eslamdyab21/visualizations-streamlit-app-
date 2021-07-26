@@ -9,7 +9,7 @@ import streamlit as st
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 #df = pd.read_csv('https://factpages.npd.no/ReportServer_npdpublic?/FactPages/tableview/field_production_gross_monthly&rs:Command=Render&rc:Toolbar=false&rc:Parameters=f&IpAddress=not_used&CultureCode=en&rs:Format=CSV&Top100=false')
-df = pd.read_csv('dat.csv')
+df = pd.read_csv('data.csv')
 # make a new time column
 df['Time'] = df['prfYear'].astype(str) + '-' + df['prfMonth'].astype(str)
 
