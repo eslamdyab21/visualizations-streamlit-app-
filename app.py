@@ -11,6 +11,10 @@ import os
 import zipfile
 import shutil
 import SessionState
+import random
+
+session_state = SessionState.get(random_number=random.random())
+
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 st.set_page_config(layout="wide")
