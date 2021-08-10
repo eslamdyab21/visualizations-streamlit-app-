@@ -14,10 +14,10 @@ import SessionState
 import random
 
 session_state = SessionState.get(random_number=random.random())
-st.write("This number should be unique for each browser tab:", session_state.random_number)
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 st.set_page_config(layout="wide")
+st.write("This number should be unique for each browser tab:", session_state.random_number)
 
 @st.cache
 def load_data():
