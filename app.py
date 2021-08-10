@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.pylab as plt
 import matplotlib.dates as mdates
 from matplotlib.ticker import FixedLocator
+pd.options.mode.chained_assignment = None 
 import streamlit as st
 import os
 import zipfile
