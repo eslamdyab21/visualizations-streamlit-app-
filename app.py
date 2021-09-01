@@ -76,7 +76,7 @@ dfMultOil = dfMultOil[dfMultOil['Field'].isin(lstOil)].pivot(index='Years', colu
 
 #=================================================== ============ ==================================
 
-sideBarSel = st.sidebar.radio("Navigation",['Group','Individual','Calculation'])
+sideBarSel = st.sidebar.radio("Navigation",['Histograms','Group','Individual','Calculation'])
 
 #================================================= Wellbore Exploration All rex code=========================
 # drop empty values in fldNpdidField column
