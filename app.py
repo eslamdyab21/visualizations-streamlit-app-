@@ -76,8 +76,6 @@ dfMultOil = dfMultOil[dfMultOil['Field'].isin(lstOil)].pivot(index='Years', colu
 
 #=================================================== ============ ==================================
 
-sideBarSel = st.sidebar.radio("Navigation",['Histograms','Group','Individual','Calculation'])
-
 #================================================= Wellbore Exploration All rex code=========================
 # drop empty values in fldNpdidField column
 df_Wellbore_Exploration_All = df_Wellbore_Exploration_All[df_Wellbore_Exploration_All['fldNpdidField'].notna()]
@@ -1096,7 +1094,7 @@ def plotMult1(df_new,dft_new,xtime):
                 plt.savefig(final_directory + '/' + userValue + ' field production month.png') 
                 st.pyplot()
 
-if sideBarSel== 'Group' :
+if st.button('Plot Group Graphs'):
     st.header('Group Graphs')
     groupORindiv = 'group'
     #=====================================MultiOil=======================================================
@@ -1352,7 +1350,7 @@ if (answer == 'individual' or answer =='both' or len(graphNum) ==1):
         dfcSum[userValues[i] + ' Cumulative'] = dfcSum[userValues[i]].cumsum()    
         lstdf.append(dfcSum)
 
-if sideBarSel== 'Individual' :
+if st.button('Plot Individual Graphs'):
     st.header('Individual Graphs')
     groupORindiv = 'indiv'
 
@@ -1494,7 +1492,7 @@ userVal = userVal.lower()
 
 #===============================================================================================================================================================#
 #Ploting
-if sideBarSel== 'Calculation' :
+if st.button('Plot Calculations Graphs'):
     st.header('Calculations Graphs')
 
     # Plot GOR
