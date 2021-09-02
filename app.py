@@ -216,11 +216,11 @@ with st.beta_expander('Display/hide histograms',True):
     plt.xticks(fontsize=10)
     plt.savefig(final_directory + '/' + userValue + ' Oil Volumes.png')
     col1.pyplot()
-    
+
 
     if uniteType_Gas == 'ft3':
         df3FilterdGas = df3FilterdGas*35.315
-    
+
     # convert the columns to rows for the bar chart (GAS)
     df3FilterdGas_T = df3FilterdGas.T.reset_index()
 
@@ -233,7 +233,7 @@ with st.beta_expander('Display/hide histograms',True):
                 color = color_base)
 
     ax.bar_label(ax.containers[0],fmt='%.2f');
-    
+
     plt.title(userValue + ' Gas Volumes');
     plt.xlabel('');
     if uniteType_Gas == 'ft3':
@@ -744,8 +744,9 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
     df_Wellbore_development['fldNpdidField'] = df_Wellbore_development['fldNpdidField'].astype(int)
 
     df_Field_Reserves = df_Field_Reserves[['fldNpdidField','fldName']]
-
-    df_wells = pd.merge(df_Wellbore_development,df_Field_Reserves, on='fldNpdidField')
+    ## TODO Change merge to join and inspecting
+    #df_wells = pd.merge(df_Wellbore_development,df_Field_Reserves, on='fldNpdidField')
+    df_wells = df_Field_Reserves.join(df_Wellbore_development.set_index('fldNpdidField'),on='fldNpdidField', how='left')
 
     df_wells.drop(columns=['fldNpdidField'],inplace=True)
     # get the count wells df
