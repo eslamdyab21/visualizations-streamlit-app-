@@ -756,63 +756,63 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
 with st.beta_expander("Display well's status histograms",False):
     dfWellsAllFields = df_wells.copy()
     df_wells.drop(columns=['fldNpdidField'], inplace=True)
-    
+
     # y wells
     dfYwellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbWellboreName'].str.find('Y') !=-1]
-    dfYwellsAllFields = dfYwellsAllFields.groupby('fldName')['wlbWellboreName'].count()
+    dfYwellsAllFields = dfYwellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
     dfYwellsAllFields = dfYwellsAllFields.reset_index()
-    wells_dict = dfYwellsAllFields.set_index('fldName')['wlbWellboreName'].to_dict()
+    wells_dict = dfYwellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
 
     # producing well
     dfProdWellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbStatus'] == 'PRODUCING']
-    dfProdWellsAllFields = dfProdWellsAllFields.groupby('fldName')['wlbWellboreName'].count()
+    dfProdWellsAllFields = dfProdWellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
     dfProdWellsAllFields = dfProdWellsAllFields.reset_index()
-    wellsProd_dict = dfProdWellsAllFields.set_index('fldName')['wlbWellboreName'].to_dict()
+    wellsProd_dict = dfProdWellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
 
     # injecting well
     dfInjWellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbStatus'] == 'INJECTING']
-    dfInjWellsAllFields = dfInjWellsAllFields.groupby('fldName')['wlbWellboreName'].count()
+    dfInjWellsAllFields = dfInjWellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
     dfInjWellsAllFields = dfInjWellsAllFields.reset_index()
-    wellsInj_dict = dfInjWellsAllFields.set_index('fldName')['wlbWellboreName'].to_dict()
+    wellsInj_dict = dfInjWellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
 
     # producing oil
     dfProdOILWellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbStatus'] == 'PRODUCING']
     dfProdOILWellsAllFields = dfProdOILWellsAllFields[dfProdOILWellsAllFields['wlbContent'] == 'OIL']
-    dfProdOILWellsAllFields = dfProdOILWellsAllFields.groupby('fldName')['wlbWellboreName'].count()
+    dfProdOILWellsAllFields = dfProdOILWellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
     dfProdOILWellsAllFields = dfProdOILWellsAllFields.reset_index()
-    wellsProdOIL_dict = dfProdOILWellsAllFields.set_index('fldName')['wlbWellboreName'].to_dict()
+    wellsProdOIL_dict = dfProdOILWellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
 
     # producing gas
     dfProdGASWellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbStatus'] == 'PRODUCING']
     dfProdGASWellsAllFields = dfProdGASWellsAllFields[dfProdGASWellsAllFields['wlbContent'] == 'GAS']
-    dfProdGASWellsAllFields = dfProdGASWellsAllFields.groupby('fldName')['wlbWellboreName'].count()
+    dfProdGASWellsAllFields = dfProdGASWellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
     dfProdGASWellsAllFields = dfProdGASWellsAllFields.reset_index()
-    wellsProdGAS_dict = dfProdGASWellsAllFields.set_index('fldName')['wlbWellboreName'].to_dict()
+    wellsProdGAS_dict = dfProdGASWellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
 
     # injecting gas
     dfInjGASWellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbStatus'] == 'INJECTING']
     dfInjGASWellsAllFields = dfInjGASWellsAllFields[dfInjGASWellsAllFields['wlbContent'] == 'GAS']
-    dfInjGASWellsAllFields = dfInjGASWellsAllFields.groupby('fldName')['wlbWellboreName'].count()
+    dfInjGASWellsAllFields = dfInjGASWellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
     dfInjGASWellsAllFields = dfInjGASWellsAllFields.reset_index()
-    wellsInjGAS_dict = dfInjGASWellsAllFields.set_index('fldName')['wlbWellboreName'].to_dict()
+    wellsInjGAS_dict = dfInjGASWellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
 
     # injecting water
     dfInjWATERWellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbStatus'] == 'INJECTING']
     dfInjWATERWellsAllFields = dfInjWATERWellsAllFields[dfInjWATERWellsAllFields['wlbContent'] == 'WATER']
-    dfInjWATERWellsAllFields = dfInjWATERWellsAllFields.groupby('fldName')['wlbWellboreName'].count()
+    dfInjWATERWellsAllFields = dfInjWATERWellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
     dfInjWATERWellsAllFields = dfInjWATERWellsAllFields.reset_index()
-    wellsInjWATER_dict = dfInjWATERWellsAllFields.set_index('fldName')['wlbWellboreName'].to_dict()
+    wellsInjWATER_dict = dfInjWATERWellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
 
 
-    wellsCountDF = dfWellsAllFields.groupby('fldName')['wlbWellboreName'].count()
+    wellsCountDF = dfWellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
     wellsCountDF = wellsCountDF.reset_index()
-    wellsCountDF['YwlbWellboreName'] = wellsCountDF['fldName'].map(wells_dict)
-    wellsCountDF['wlProdbWellboreName'] = wellsCountDF['fldName'].map(wellsProd_dict)
-    wellsCountDF['wlInjbWellboreName'] = wellsCountDF['fldName'].map(wellsInj_dict)
-    wellsCountDF['wlProdOILbWellboreName'] = wellsCountDF['fldName'].map(wellsProdOIL_dict)
-    wellsCountDF['wlProdGASbWellboreName'] = wellsCountDF['fldName'].map(wellsProdGAS_dict)
-    wellsCountDF['wlInjGASbWellboreName'] = wellsCountDF['fldName'].map(wellsInjGAS_dict)
-    wellsCountDF['wlInjWATERbWellboreName'] = wellsCountDF['fldName'].map(wellsInjWATER_dict)
+    wellsCountDF['YwlbWellboreName'] = wellsCountDF['fldNpdidField'].map(wells_dict)
+    wellsCountDF['wlProdbWellboreName'] = wellsCountDF['fldNpdidField'].map(wellsProd_dict)
+    wellsCountDF['wlInjbWellboreName'] = wellsCountDF['fldNpdidField'].map(wellsInj_dict)
+    wellsCountDF['wlProdOILbWellboreName'] = wellsCountDF['fldNpdidField'].map(wellsProdOIL_dict)
+    wellsCountDF['wlProdGASbWellboreName'] = wellsCountDF['fldNpdidField'].map(wellsProdGAS_dict)
+    wellsCountDF['wlInjGASbWellboreName'] = wellsCountDF['fldNpdidField'].map(wellsInjGAS_dict)
+    wellsCountDF['wlInjWATERbWellboreName'] = wellsCountDF['fldNpdidField'].map(wellsInjWATER_dict)
 
     wellsCountDF = wellsCountDF.fillna(0)
     wellsCountDF['YwlbWellboreName'] = wellsCountDF['YwlbWellboreName'].astype(int)
@@ -837,7 +837,7 @@ with st.beta_expander("Display well's status histograms",False):
 
     # dropdown status selecttion
     stlst = df_wells['wlbStatus'].unique()
-    stselc = st.selectbox('Select a status to filtter with',stlst)    
+    stselc = st.selectbox('Select a status to filtter with',stlst)
     st.dataframe(df_wells[df_wells['wlbStatus'] == stselc])
     # save the well count df with the main well
     #--------------------------------------------------------------
