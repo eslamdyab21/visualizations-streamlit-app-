@@ -826,7 +826,7 @@ with st.beta_expander("Display well's status histograms",False):
     wellsCountDF = wellsCountDF.rename(columns={'wlbWellboreName':'well count','YwlbWellboreName':'well count y','wlProdbWellboreName':'well production','wlInjbWellboreName':'well injecting',
     'wlProdOILbWellboreName':'well producing oil','wlProdGASbWellboreName':'well producing gas','wlInjGASbWellboreName':'well injecting gas','wlInjWATERbWellboreName':'well injecting water'})
 
-    wellsCountDF = df_wells[['fldNpdidField','fldName']].join(wellsCountDF.set_index('fldNpdidField'),on='fldNpdidField', how='left')
+    wellsCountDF = dfWellsAllFields[['fldNpdidField','fldName']].join(wellsCountDF.set_index('fldNpdidField'),on='fldNpdidField', how='left')
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
