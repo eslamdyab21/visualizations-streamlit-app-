@@ -747,12 +747,16 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
     ## TODO Change merge to join and inspecting
     #df_wells = pd.merge(df_Wellbore_development,df_Field_Reserves, on='fldNpdidField')
     df_wells = df_Field_Reserves.join(df_Wellbore_development.set_index('fldNpdidField'),on='fldNpdidField', how='left')
-
-    df_wells.drop(columns=['fldNpdidField'],inplace=True)
+    different = list(set(list(df_Wellbore_development['fldNpdidField'].unique())) - set(list(df_Field_Reserves['fldNpdidField'].unique())))
+    df_wells = df_wells.append(df_Wellbore_development[df_Wellbore_development['fldNpdidField'].isin(different)],ignore_index=True)
+    #df_wellsOUT = df_wells.copy()
+    #df_wells.drop(columns=['fldNpdidField'],inplace=True)
     # get the count wells df
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 with st.beta_expander("Display well's status histograms",False):
     dfWellsAllFields = df_wells.copy()
+    df_wells.drop(columns=['fldNpdidField'], inplace=True)
+    
     # y wells
     dfYwellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbWellboreName'].str.find('Y') !=-1]
     dfYwellsAllFields = dfYwellsAllFields.groupby('fldName')['wlbWellboreName'].count()
@@ -833,8 +837,7 @@ with st.beta_expander("Display well's status histograms",False):
 
     # dropdown status selecttion
     stlst = df_wells['wlbStatus'].unique()
-    stselc = st.selectbox('Select a status to filtter with',stlst) 
-
+    stselc = st.selectbox('Select a status to filtter with',stlst)    
     st.dataframe(df_wells[df_wells['wlbStatus'] == stselc])
     # save the well count df with the main well
     #--------------------------------------------------------------
