@@ -683,7 +683,7 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
     #fieldslst = list(df_Wellbore_Exploration_All_and_Reserves.index.unique())
     #selectedfield = st.selectbox('Select a Field to filtter with',fieldslst)
     #df_Wellbore_Exploration_All_and_Reserves = df_Wellbore_Exploration_All_and_Reserves[df_Wellbore_Exploration_All_and_Reserves.index == selectedfield]
-    wlbMainAreaValues
+
     st.text('Check wanted NCS segments')
     option1 = st.checkbox(wlbMainAreaValues[0])
     option2 = st.checkbox(wlbMainAreaValues[1])
