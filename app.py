@@ -857,7 +857,7 @@ with st.beta_expander("Display well's status histograms",False):
         plt.savefig(final_directory + '/' + userValue + " Wellbore Status Histogram2.png")
         st.pyplot()
 
-        col1,col2 = st.beta_columns(2)
+        '''col1,col2 = st.beta_columns(2)
         
         if df_wells[df_wells['wlbStatus'] == 'PRODUCING']['wlbContent'].value_counts().shape[0] >0:
             p = df_wells[df_wells['wlbStatus'] == 'PRODUCING']['wlbContent'].value_counts().plot(kind='bar',figsize=(6, 4.5));
@@ -894,7 +894,7 @@ with st.beta_expander("Display well's status histograms",False):
             plt.ylabel('Number of Wells')
             plt.title( userValue + ' Injection Wells');
             plt.savefig(final_directory + '/' + userValue + " Production Wells Histogram.png")
-            col2.pyplot()
+            col2.pyplot()'''
     else:
         col1.text('No data in wlbContent for selected field')
 #=======================================================================================================================================================
