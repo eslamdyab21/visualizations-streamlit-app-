@@ -1,10 +1,10 @@
 class wells:
 
     def get_wellsCountDF(self,df_Wellbore_development,df_Field_Reserves):
-        df_Wellbore_development = df_Wellbore_development[['fldNpdidField','wlbWellboreName','wlbStatus','wlbPurpose','wlbContent']]
+        df_Wellbore_development = df_Wellbore_development[['fldNpdidField','wlbWellboreName','wlbStatus','wlbPurpose','wlbContent','wlbNamePart5']]
 
-        df_Wellbore_development.dropna(inplace=True)
-        #df_Wellbore_development = df_Wellbore_development[df_Wellbore_development['fldNpdidField'].notna()]
+        #df_Wellbore_development.dropna(inplace=True)
+        df_Wellbore_development = df_Wellbore_development[df_Wellbore_development['fldNpdidField'].notna()]
 
         df_Wellbore_development['fldNpdidField'] = df_Wellbore_development['fldNpdidField'].astype(int)
 
@@ -19,10 +19,10 @@ class wells:
         dfWellsAllFields.head()
 
         # Y wells multilateral in ['wlbNamePart5'])
-        dfYwellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbWellboreName'].str.find('Y') !=-1]
-        dfYwellsAllFields = dfYwellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
+        dfYwellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbNamePart5'].str.find('Y') != -1]
+        dfYwellsAllFields = dfYwellsAllFields.groupby('fldNpdidField')['wlbNamePart5'].count()
         dfYwellsAllFields = dfYwellsAllFields.reset_index()
-        wells_dict = dfYwellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
+        wells_dict = dfYwellsAllFields.set_index('fldNpdidField')['wlbNamePart5'].to_dict()
 
         #wells_dict
 
