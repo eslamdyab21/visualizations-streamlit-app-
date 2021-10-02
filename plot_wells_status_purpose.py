@@ -114,6 +114,8 @@ class plot_wells_status_purpose_content:
                 plt.xticks(fontsize=4, rotation=0)
                 plt.ylabel('Number of Wells')
                 plt.xlabel('')
+                if statusHist.shape[0] > 11:
+                    plt.xticks(rotation=90)
                 plt.title(userValue + ' Wellbore Status');
                 plt.savefig(final_directory + '/' + userValue + " Wellbore Status Histogram2.png")
                 col1.pyplot()
@@ -204,7 +206,6 @@ class plot_wells_status_purpose_content:
 
                 # plot the statusHist
                 p = statusHist.plot(kind='bar', figsize=(8, 4.5), legend=False);
-                st.text(statusHist.shape)
                 p.bar_label(p.containers[0]);
 
                 if 'PRODUCTION OIL' in fluidsStatList:
@@ -223,6 +224,8 @@ class plot_wells_status_purpose_content:
                 plt.xticks(fontsize=4, rotation=0)
                 plt.ylabel('Number of Wells')
                 plt.xlabel('')
+                if statusHist.shape[0] > 11:
+                    plt.xticks(rotation=90)
                 plt.title(userValue + ' Wellbore Purpose');
                 plt.savefig(final_directory + '/' + userValue + " Wellbore Purpose Histogram2.png")
                 col2.pyplot()
