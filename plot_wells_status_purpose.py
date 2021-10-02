@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import streamlit as st
 import os
 class plot_wells_status_purpose_content:
+    def __init__(self):
+        self.col1, self.col2 = st.beta_columns(2)
     def plot_contetnt(self, df_wells, userValue, final_directory):
         col1, col2, col3 = st.beta_columns(3)
 
@@ -16,8 +18,9 @@ class plot_wells_status_purpose_content:
             plt.savefig(final_directory + '/' + userValue + " Wellbore Content Histogram.png")
             col2.pyplot()
 
+    
     def plot_status(self,df_wells,userValue,final_directory):
-        col1, col2, col3 = st.beta_columns(3)
+        
         fluidsListPR = df_wells[df_wells['wlbStatus'] == 'PRODUCING']['wlbContent'].value_counts().index.to_list()
         fluidsListING = df_wells[df_wells['wlbStatus'] == 'INJECTING']['wlbContent'].value_counts().index.to_list()
 
@@ -82,7 +85,7 @@ class plot_wells_status_purpose_content:
             plt.xlabel('')
             plt.title(userValue + ' Wellbore Status');
             plt.savefig(final_directory + '/' + userValue + " Wellbore Status Histogram2.png")
-            col2.pyplot()
+            self.col1.pyplot()
 
     def plot_purpose(self,df_wells,userValue,final_directory):
         fluidsListPR = df_wells[df_wells['wlbPurpose'] == 'PRODUCTION']['wlbContent'].value_counts().index.to_list()
@@ -149,4 +152,4 @@ class plot_wells_status_purpose_content:
             plt.xlabel('')
             plt.title(userValue + ' Wellbore Purpose');
             plt.savefig(final_directory + '/' + userValue + " Wellbore Purpose Histogram2.png")
-            st.pyplot()
+            self.col2.pyplot()
