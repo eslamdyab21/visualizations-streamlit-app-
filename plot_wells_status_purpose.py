@@ -1,4 +1,6 @@
 import pandas as pd
+import pandas as pd
+pd.options.mode.chained_assignment = None  # default='warn'
 import matplotlib.pyplot as plt
 import streamlit as st
 import os
