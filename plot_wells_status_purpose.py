@@ -17,7 +17,7 @@ class plot_wells_status_purpose_content:
             col2.pyplot()
 
     def plot_status(self,df_wells,userValue,final_directory,col1):
-        
+
         fluidsListPR = df_wells[df_wells['wlbStatus'] == 'PRODUCING']['wlbContent'].value_counts().index.to_list()
         fluidsListING = df_wells[df_wells['wlbStatus'] == 'INJECTING']['wlbContent'].value_counts().index.to_list()
 
@@ -30,7 +30,7 @@ class plot_wells_status_purpose_content:
             return oilPRODUCINGdict
 
         if df_wells['wlbContent'].value_counts().shape[0] > 0:
-            # get oil, gas, water series (call the fun) and append the oil,gas,water
+            # get oil, gas, water,OIL/GAS,OIL/GAS/CONDENSATE,WATER/GAS series (call the fun) and append the oil,gas,water
             if 'OIL' in fluidsListPR:
                 oilPRODUCINGdser = getSeries('PRODUCING', 'OIL')
                 statusHist = df_wells['wlbStatus'].value_counts().append(oilPRODUCINGdser)
@@ -40,6 +40,27 @@ class plot_wells_status_purpose_content:
                     statusHist = statusHist.append(gasPRODUCINGdser)
                 except:
                     statusHist = df_wells['wlbStatus'].value_counts().append(gasPRODUCINGdser)
+            if 'OIL/GAS' in fluidsListPR:
+                oil_gas_PRODUCINGdser = getSeries('PRODUCING', 'OIL/GAS')
+                try:
+                    statusHist = statusHist.append(oil_gas_PRODUCINGdser)
+                except:
+                    statusHist = df_wells['wlbStatus'].value_counts().append(oil_gas_PRODUCINGdser)
+            if 'OIL/GAS/CONDENSATE' in fluidsListPR:
+                oil_gas_cond_PRODUCINGdser = getSeries('PRODUCING', 'OIL/GAS/CONDENSATE')
+                try:
+                    statusHist = statusHist.append(oil_gas_cond_PRODUCINGdser)
+                except:
+                    statusHist = df_wells['wlbStatus'].value_counts().append(oil_gas_cond_PRODUCINGdser)
+            if 'WATER/GAS' in fluidsListPR:
+                water_gas_PRODUCINGdser = getSeries('PRODUCING', 'OIL/GAS/CONDENSATE')
+                try:
+                    statusHist = statusHist.append(water_gas_PRODUCINGdser)
+                except:
+                    statusHist = df_wells['wlbStatus'].value_counts().append(water_gas_PRODUCINGdser)
+
+
+
             if 'WATER' in fluidsListING:
                 waterINJECTINGGdser = getSeries('INJECTING', 'WATER')
                 try:
@@ -52,6 +73,19 @@ class plot_wells_status_purpose_content:
                     statusHist = statusHist.append(gasINJECTINGdser)
                 except:
                     statusHist = df_wells['wlbStatus'].value_counts().append(gasINJECTINGdser)
+            if 'OIL/GAS' in fluidsListING:
+                oil_gas_INJECTINGdser = getSeries('INJECTING', 'OIL/GAS')
+                try:
+                    statusHist = statusHist.append(oil_gas_INJECTINGdser)
+                except:
+                    statusHist = df_wells['wlbStatus'].value_counts().append(oil_gas_INJECTINGdser)
+            if 'WATER/GAS' in fluidsListING:
+                water_gas_INJECTINGdser = getSeries('INJECTING', 'WATER/GAS')
+                try:
+                    statusHist = statusHist.append(water_gas_INJECTINGdser)
+                except:
+                    statusHist = df_wells['wlbStatus'].value_counts().append(water_gas_INJECTINGdser)
+
 
             statusHist = statusHist.sort_values(ascending=False)
 
@@ -101,12 +135,37 @@ class plot_wells_status_purpose_content:
             if 'OIL' in fluidsListPR:
                 oilPRODUCINGdser = getSeries('PRODUCTION', 'OIL')
                 statusHist = df_wells['wlbPurpose'].value_counts().append(oilPRODUCINGdser)
+                
             if 'GAS' in fluidsListPR:
                 gasPRODUCINGdser = getSeries('PRODUCTION', 'GAS')
                 try:
                     statusHist = statusHist.append(gasPRODUCINGdser)
                 except:
                     statusHist = df_wells['wlbPurpose'].value_counts().append(gasPRODUCINGdser)
+                    
+            if 'OIL/GAS' in fluidsListPR:
+                oil_gas_PRODUCINGdser = getSeries('PRODUCTION', 'OIL/GAS')
+                try:
+                    statusHist = statusHist.append(oil_gas_PRODUCINGdser)
+                except:
+                    statusHist = df_wells['wlbPurpose'].value_counts().append(oil_gas_PRODUCINGdser)
+                    
+            if 'OIL/GAS/CONDENSATE' in fluidsListPR:
+                oil_gas_cond_PRODUCINGdser = getSeries('PRODUCTION', 'OIL/GAS/CONDENSATE')
+                try:
+                    statusHist = statusHist.append(oil_gas_cond_PRODUCINGdser)
+                except:
+                    statusHist = df_wells['wlbPurpose'].value_counts().append(oil_gas_cond_PRODUCINGdser)
+                    
+            if 'WATER/GAS' in fluidsListPR:
+                water_gas_PRODUCINGdser = getSeries('PRODUCTION', 'OIL/GAS/CONDENSATE')
+                try:
+                    statusHist = statusHist.append(water_gas_PRODUCINGdser)
+                except:
+                    statusHist = df_wells['wlbPurpose'].value_counts().append(water_gas_PRODUCINGdser)
+                    
+                    
+                    
             if 'WATER' in fluidsListING:
                 waterINJECTINGGdser = getSeries('INJECTION', 'WATER')
                 try:
@@ -119,6 +178,20 @@ class plot_wells_status_purpose_content:
                     statusHist = statusHist.append(gasINJECTINGdser)
                 except:
                     statusHist = df_wells['wlbPurpose'].value_counts().append(gasINJECTINGdser)
+            if 'OIL/GAS' in fluidsListING:
+                oil_gas_INJECTINGdser = getSeries('INJECTION', 'OIL/GAS')
+                try:
+                    statusHist = statusHist.append(oil_gas_INJECTINGdser)
+                except:
+                    statusHist = df_wells['wlbPurpose'].value_counts().append(oil_gas_INJECTINGdser)
+            if 'WATER/GAS' in fluidsListING:
+                water_gas_INJECTINGdser = getSeries('INJECTION', 'WATER/GAS')
+                try:
+                    statusHist = statusHist.append(water_gas_INJECTINGdser)
+                except:
+                    statusHist = df_wells['wlbPurpose'].value_counts().append(water_gas_INJECTINGdser)
+                    
+                    
 
             statusHist = statusHist.sort_values(ascending=False)
 
