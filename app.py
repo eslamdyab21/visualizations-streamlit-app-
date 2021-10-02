@@ -770,9 +770,10 @@ with st.beta_expander("Display well's status histograms",False):
     #--------------------------------------------------------------
     from plot_wells_status_purpose import plot_wells_status_purpose_content
     plot_wells_status_purpose_content().plot_contetnt(df_wells,userValue,final_directory)
-    plot_wells_status_purpose_content().plot_status(df_wells, userValue, final_directory)
-    plot_wells_status_purpose_content().plot_purpose(df_wells, userValue, final_directory)
-    
+    col1, col2 = st.beta_columns(2)
+    plot_wells_status_purpose_content().plot_status(df_wells, userValue, final_directory,col1)
+    plot_wells_status_purpose_content().plot_purpose(df_wells, userValue, final_directory,col2)
+
 #=======================================================================================================================================================
 dfcum = df_newcSUM.copy()
 
