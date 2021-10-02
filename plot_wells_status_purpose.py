@@ -117,6 +117,8 @@ class plot_wells_status_purpose_content:
                 if statusHist.shape[0] > 10:
                     plt.xticks(fontsize=8)
                     plt.xticks(rotation=90)
+                elif statusHist.shape[0] < 8:
+                    plt.xticks(fontsize=6)
                 plt.title(userValue + ' Wellbore Status');
                 plt.savefig(final_directory + '/' + userValue + " Wellbore Status Histogram2.png")
                 col1.pyplot()
@@ -228,6 +230,8 @@ class plot_wells_status_purpose_content:
                 if statusHist.shape[0] > 10:
                     plt.xticks(fontsize=8)
                     plt.xticks(rotation=90)
+                elif statusHist.shape[0] < 8:
+                    plt.xticks(fontsize=6)
                 plt.title(userValue + ' Wellbore Purpose');
                 plt.savefig(final_directory + '/' + userValue + " Wellbore Purpose Histogram2.png")
                 col2.pyplot()
