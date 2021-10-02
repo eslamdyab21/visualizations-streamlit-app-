@@ -130,10 +130,10 @@ class plot_wells_status_purpose_content:
             p = statusHist.plot(kind='bar', figsize=(8, 4.5), legend=False);
             p.bar_label(p.containers[0]);
 
-            if 'PRODUCING OIL' in fluidsStatList:
+            if 'PRODUCTION OIL' in fluidsStatList:
                 oilIndex = fluidsStatList.index('PRODUCTION OIL')
                 p.patches[oilIndex].set_color('green')
-            if 'PRODUCING GAS' in fluidsStatList:
+            if 'PRODUCTION GAS' in fluidsStatList:
                 GASIndex = fluidsStatList.index('PRODUCTION GAS')
                 p.patches[GASIndex].set_color('red')
             if 'INJECTION WATER' in fluidsStatList:
