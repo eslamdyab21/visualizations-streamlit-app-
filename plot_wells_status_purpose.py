@@ -1,6 +1,7 @@
 import pandas as pd
-import matplotlib as plt
 import streamlit as st
+import matplotlib.pyplot as plt
+import os
 class plot_wells_status_purpose_content:
     def plot(self,df_wells,userValue,final_directory):
         fluidsListPR = df_wells[df_wells['wlbStatus'] == 'PRODUCING']['wlbContent'].value_counts().index.to_list()
