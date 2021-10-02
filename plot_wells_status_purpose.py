@@ -20,7 +20,7 @@ class plot_wells_status_purpose_content:
 
         fluidsListPR = df_wells[df_wells['wlbStatus'] == 'PRODUCING']['wlbContent'].value_counts().index.to_list()
         fluidsListING = df_wells[df_wells['wlbStatus'] == 'INJECTING']['wlbContent'].value_counts().index.to_list()
-
+        fluidsListPR
         # get oil and gas series
         def getSeries(status, fluid):
             oilPRODUCINGdict = df_wells[df_wells['wlbContent'] == fluid]['wlbStatus'][
