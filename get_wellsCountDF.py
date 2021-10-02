@@ -19,8 +19,9 @@ class wells:
         dfWellsAllFields.head()
 
         # Y wells multilateral in ['wlbNamePart5'])
-        dfYwellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbNamePart5'].str.find('Y') != -1]
-        dfYwellsAllFields = dfYwellsAllFields.groupby('fldNpdidField')['wlbNamePart5'].count()
+        pureY_df = dfWellsAllFields[dfWellsAllFields['wlbNamePart5'].notna()]
+        pureY_df = pureY_df[pureY_df['wlbNamePart5'].str.find('Y') != -1]
+        dfYwellsAllFields = pureY_df.groupby('fldNpdidField')['wlbNamePart5'].count()
         dfYwellsAllFields = dfYwellsAllFields.reset_index()
         wells_dict = dfYwellsAllFields.set_index('fldNpdidField')['wlbNamePart5'].to_dict()
 
@@ -68,7 +69,6 @@ class wells:
         #wellsProdOIL_dict
 
         # PRODUCTION OIL/GAS
-        dfProdOILWellsAllFields
         dfProdOILANDGASWellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbPurpose'] == 'PRODUCTION']
         dfProdOILANDGASWellsAllFields = dfProdOILANDGASWellsAllFields[dfProdOILANDGASWellsAllFields['wlbContent'] == 'OIL/GAS']
         dfProdOILANDGASWellsAllFields = dfProdOILANDGASWellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
