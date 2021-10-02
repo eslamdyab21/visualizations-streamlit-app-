@@ -1,6 +1,4 @@
 import pandas as pd
-import pandas as pd
-pd.options.mode.chained_assignment = None  # default='warn'
 import numpy as np
 import base64
 import seaborn as sb
@@ -12,6 +10,9 @@ import streamlit as st
 import os
 import zipfile
 import shutil
+#import SessionState
+import random
+#session_state = SessionState.get(random_number=random.random())
 import plot_wells_status_purpose
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
@@ -749,8 +750,9 @@ with st.beta_expander("Display well's status histograms",False):
 
     st.text("Well's field information. The total number of wells:" + str(df_wells['wlbWellboreName'].nunique()))
     # Num of wells name that have Y in it
-    df_wellsY = df_wells[df_wells['wlbNamePart5'].str.find('Y') !=-1]
-    yCount = df_wellsY.shape[0]
+    pureY_df = dfWellsAllFields[dfWellsAllFields['wlbNamePart5'].notna()]
+    pureY_df = pureY_df[pureY_df['wlbNamePart5'].str.find('Y') != -1]
+    yCount = pureY_df.shape[0]
     st.text("Number of wells planned as multilateral wellbores (Y):" + str(yCount))
 
     # dropdown status selecttion
