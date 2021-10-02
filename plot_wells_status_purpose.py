@@ -114,7 +114,8 @@ class plot_wells_status_purpose_content:
                 plt.xticks(fontsize=4, rotation=0)
                 plt.ylabel('Number of Wells')
                 plt.xlabel('')
-                if statusHist.shape[0] > 11:
+                if statusHist.shape[0] > 10:
+                    plt.xticks(fontsize=8)
                     plt.xticks(rotation=90)
                 plt.title(userValue + ' Wellbore Status');
                 plt.savefig(final_directory + '/' + userValue + " Wellbore Status Histogram2.png")
@@ -224,7 +225,8 @@ class plot_wells_status_purpose_content:
                 plt.xticks(fontsize=4, rotation=0)
                 plt.ylabel('Number of Wells')
                 plt.xlabel('')
-                if statusHist.shape[0] > 11:
+                if statusHist.shape[0] > 10:
+                    plt.xticks(fontsize=8)
                     plt.xticks(rotation=90)
                 plt.title(userValue + ' Wellbore Purpose');
                 plt.savefig(final_directory + '/' + userValue + " Wellbore Purpose Histogram2.png")
