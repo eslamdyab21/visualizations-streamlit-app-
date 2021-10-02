@@ -88,16 +88,16 @@ class plot_wells_status_purpose_content:
 
             try:
                 statusHist = statusHist.sort_values(ascending=False)
-    
+
                 statusHist = statusHist.reset_index()
                 statusHist = statusHist.sort_values('index')
                 statusHist = statusHist.set_index('index')
                 fluidsStatList = statusHist.index.to_list()
-    
+
                 # plot the statusHist
                 p = statusHist.plot(kind='bar', figsize=(8, 4.5), legend=False);
                 p.bar_label(p.containers[0]);
-    
+
                 if 'PRODUCING OIL' in fluidsStatList:
                     oilIndex = fluidsStatList.index('PRODUCING OIL')
                     p.patches[oilIndex].set_color('green')
@@ -110,7 +110,7 @@ class plot_wells_status_purpose_content:
                 if 'INJECTING GAS' in fluidsStatList:
                     GASIndex = fluidsStatList.index('INJECTING GAS')
                     p.patches[GASIndex].set_color('red')
-    
+
                 plt.xticks(fontsize=4, rotation=0)
                 plt.ylabel('Number of Wells')
                 plt.xlabel('')
@@ -196,16 +196,17 @@ class plot_wells_status_purpose_content:
 
             try:
                 statusHist = statusHist.sort_values(ascending=False)
-    
+
                 statusHist = statusHist.reset_index()
                 statusHist = statusHist.sort_values('index')
                 statusHist = statusHist.set_index('index')
                 fluidsStatList = statusHist.index.to_list()
-    
+
                 # plot the statusHist
                 p = statusHist.plot(kind='bar', figsize=(8, 4.5), legend=False);
+                st.text(statusHist.shape)
                 p.bar_label(p.containers[0]);
-    
+
                 if 'PRODUCTION OIL' in fluidsStatList:
                     oilIndex = fluidsStatList.index('PRODUCTION OIL')
                     p.patches[oilIndex].set_color('green')
@@ -218,7 +219,7 @@ class plot_wells_status_purpose_content:
                 if 'INJECTION GAS' in fluidsStatList:
                     GASIndex = fluidsStatList.index('INJECTION GAS')
                     p.patches[GASIndex].set_color('red')
-    
+
                 plt.xticks(fontsize=4, rotation=0)
                 plt.ylabel('Number of Wells')
                 plt.xlabel('')
