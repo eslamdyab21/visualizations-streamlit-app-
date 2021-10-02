@@ -12,9 +12,6 @@ import streamlit as st
 import os
 import zipfile
 import shutil
-#import SessionState
-import random
-#session_state = SessionState.get(random_number=random.random())
 import plot_wells_status_purpose
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
