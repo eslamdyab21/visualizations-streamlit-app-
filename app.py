@@ -771,7 +771,7 @@ with st.beta_expander("Display well's status histograms",False):
     fluidsListING = df_wells[df_wells['wlbStatus'] == 'INJECTING']['wlbContent'].value_counts().index.to_list()
     # Show Status Hist
 #with st.beta_expander("Click here to show well's status histograms",False):
-    col1= st.beta_columns(1)
+    col1,col2 = st.beta_columns(2)
     #get oil and gas series
     def getSeries(status,fluid):
         oilPRODUCINGdict = df_wells[df_wells['wlbContent'] == fluid]['wlbStatus'][df_wells[df_wells['wlbContent'] == fluid]['wlbStatus'] ==status].value_counts()
