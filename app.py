@@ -779,18 +779,6 @@ with st.beta_expander("Display well's status histograms",False):
         oilPRODUCINGdict = pd.Series(oilPRODUCINGdict)
         return oilPRODUCINGdict
 
-    '''if df_wells['wlbStatus'].value_counts().shape[0] >0:
-        ax = df_wells['wlbStatus'].value_counts().plot(kind='bar',figsize=(6, 4.5));
-        ax.bar_label(ax.containers[0]);
-
-        plt.xticks(fontsize=4.3,rotation=0)
-        plt.ylabel('Number of Wells')
-        plt.title( userValue + ' Wellbore Status');
-        plt.savefig(final_directory + '/' + userValue + " Wellbore Status Histogram.png")
-        col1.pyplot()
-    else:
-        col1.text('No data in wlbStatus for selected field')'''
-
     if df_wells['wlbContent'].value_counts().shape[0] >0:
         ax = df_wells['wlbContent'].value_counts().plot(kind='bar',figsize=(6, 4.5));
         ax.bar_label(ax.containers[0]);
@@ -856,47 +844,6 @@ with st.beta_expander("Display well's status histograms",False):
         plt.title( userValue + ' Wellbore Status');
         plt.savefig(final_directory + '/' + userValue + " Wellbore Status Histogram2.png")
         st.pyplot()
-
-        '''col1,col2 = st.beta_columns(2)
-        
-        if df_wells[df_wells['wlbStatus'] == 'PRODUCING']['wlbContent'].value_counts().shape[0] >0:
-            p = df_wells[df_wells['wlbStatus'] == 'PRODUCING']['wlbContent'].value_counts().plot(kind='bar',figsize=(6, 4.5));
-            p.bar_label(p.containers[0]);
-
-            if 'OIL' in fluidsListPR:
-                oilIndex = fluidsListPR.index('OIL')
-                p.patches[oilIndex].set_color('green')
-            if 'GAS' in fluidsListPR:
-                GASIndex = fluidsListPR.index('GAS')
-                p.patches[GASIndex].set_color('red')
-
-            plt.xticks(fontsize=5,rotation=0)
-            plt.ylabel('Number of Wells')
-            plt.title( userValue + ' Production Wells');
-            plt.savefig(final_directory + '/' + userValue + " Production Wells Histogram.png")
-            col1.pyplot()
-
-        if df_wells[df_wells['wlbStatus'] == 'INJECTING']['wlbContent'].value_counts().shape[0] >0:
-            p = df_wells[df_wells['wlbStatus'] == 'INJECTING']['wlbContent'].value_counts().plot(kind='bar',figsize=(6, 4.5));
-            p.bar_label(p.containers[0]);
-
-            if 'WATER' in fluidsListING:
-                waterIndex = fluidsListING.index('WATER')
-                p.patches[waterIndex].set_color('#d4f1f9')
-            if 'GAS' in fluidsListING:
-                GASIndex = fluidsListING.index('GAS')
-                p.patches[GASIndex].set_color('red')
-            if 'OIL' in fluidsListING:
-                OILIndex = fluidsListING.index('OIL')
-                p.patches[OILIndex].set_color('green')
-            
-            plt.xticks(fontsize=5,rotation=0)
-            plt.ylabel('Number of Wells')
-            plt.title( userValue + ' Injection Wells');
-            plt.savefig(final_directory + '/' + userValue + " Production Wells Histogram.png")
-            col2.pyplot()
-    else:
-        col1.text('No data in wlbContent for selected field')'''
 #=======================================================================================================================================================
 dfcum = df_newcSUM.copy()
 
