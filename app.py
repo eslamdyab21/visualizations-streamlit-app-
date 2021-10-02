@@ -769,7 +769,10 @@ with st.beta_expander("Display well's status histograms",False):
     st.markdown(get_binary_file_downloader_html('Wells.xlsx', 'Well count and the main well data'), unsafe_allow_html=True)
     #--------------------------------------------------------------
     from plot_wells_status_purpose import plot_wells_status_purpose_content
-    plot_wells_status_purpose_content().plot(df_wells,userValue,final_directory)
+    plot_wells_status_purpose_content().plot_contetnt(df_wells,userValue,final_directory)
+    plot_wells_status_purpose_content().plot_status(df_wells, userValue, final_directory)
+    plot_wells_status_purpose_content().plot_purpose(df_wells, userValue, final_directory)
+    
 #=======================================================================================================================================================
 dfcum = df_newcSUM.copy()
 
