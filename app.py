@@ -771,7 +771,7 @@ with st.beta_expander("Display well's status histograms",False):
     fluidsListING = df_wells[df_wells['wlbStatus'] == 'INJECTING']['wlbContent'].value_counts().index.to_list()
     # Show Status Hist
 #with st.beta_expander("Click here to show well's status histograms",False):
-    col1,col2 = st.beta_columns(2)
+    col1,col2,col3 = st.beta_columns(3)
     #get oil and gas series
     def getSeries(status,fluid):
         oilPRODUCINGdict = df_wells[df_wells['wlbContent'] == fluid]['wlbStatus'][df_wells[df_wells['wlbContent'] == fluid]['wlbStatus'] ==status].value_counts()
@@ -787,7 +787,7 @@ with st.beta_expander("Display well's status histograms",False):
         plt.ylabel('Number of Wells')
         plt.title( userValue + ' Wellbore Content');
         plt.savefig(final_directory + '/' + userValue + " Wellbore Content Histogram.png")
-        col1.pyplot()
+        col2.pyplot()
 
         #get oil, gas, water series (call the fun) and append the oil,gas,water 
         if 'OIL' in fluidsListPR:
