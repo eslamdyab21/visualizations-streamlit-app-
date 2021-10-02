@@ -17,6 +17,7 @@ class plot_wells_status_purpose_content:
             col2.pyplot()
 
     def plot_status(self,df_wells,userValue,final_directory):
+        col1, col2, col3 = st.beta_columns(3)
         fluidsListPR = df_wells[df_wells['wlbStatus'] == 'PRODUCING']['wlbContent'].value_counts().index.to_list()
         fluidsListING = df_wells[df_wells['wlbStatus'] == 'INJECTING']['wlbContent'].value_counts().index.to_list()
 
@@ -81,7 +82,7 @@ class plot_wells_status_purpose_content:
             plt.xlabel('')
             plt.title(userValue + ' Wellbore Status');
             plt.savefig(final_directory + '/' + userValue + " Wellbore Status Histogram2.png")
-            st.pyplot()
+            col2.pyplot()
 
     def plot_purpose(self,df_wells,userValue,final_directory):
         fluidsListPR = df_wells[df_wells['wlbPurpose'] == 'PRODUCTION']['wlbContent'].value_counts().index.to_list()
