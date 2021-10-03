@@ -127,7 +127,7 @@ class plot_wells_status_purpose_content:
                 plt.xlabel('')
                 if statusHist.shape[0] > 10 or 'OIL/GAS/CONDENSATE' in fluidsListPR or 'GAS/CONDENSATE' in fluidsListPR:
                     plt.xticks(fontsize=8)
-                    plt.xticks(rotation=30)
+                    plt.xticks(rotation=15)
                 elif statusHist.shape[0] < 8:
                     plt.xticks(fontsize=6)
                 plt.title(userValue + ' Wellbore Status');
@@ -246,7 +246,7 @@ class plot_wells_status_purpose_content:
                 plt.xlabel('')
                 if statusHist.shape[0] > 10 or 'OIL/GAS/CONDENSATE' in fluidsListPR or 'GAS/CONDENSATE' in fluidsListPR:
                     plt.xticks(fontsize=8)
-                    plt.xticks(rotation=30)
+                    plt.xticks(rotation=15)
                 elif statusHist.shape[0] < 8:
                     plt.xticks(fontsize=6)
                 plt.title(userValue + ' Wellbore Purpose');
