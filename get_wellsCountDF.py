@@ -203,78 +203,84 @@ class wells:
 
     def plot_multi_oil(self,filterdWells,dfMultOil,uniteType_Oil,final_directory):
         filtered_fields = list(filterdWells['fldName'].unique())
-        choosen_filtered_fields = st.selectbox('Select wanted fields for plotting', filtered_fields)
+        choosen_filtered_fields = st.selectbox('Select wanted fields for plotting', filtered_fields,filtered_fields)
         st.text(filtered_fields)
         st.text(choosen_filtered_fields)
-        dfMultOil = dfMultOil[dfMultOil['Field'].isin(choosen_filtered_fields)]
+        if len(choosen_filtered_fields) > 1:
+            dfMultOil = dfMultOil[dfMultOil['Field'].isin(choosen_filtered_fields)]
+        elif len(choosen_filtered_fields) == 1:
+            dfMultOil = dfMultOil[dfMultOil['Field'] == choosen_filtered_fields]
+        else:
+            st.text('No data')
 
         dfMultOil = dfMultOil.pivot(index='Years', columns='Field',values='prfPrdOilGrossMillSm3')
-        if st.button('Plot Multi Oil graph for filtered fields from formations'):
-            if uniteType_Oil == 'STB':
-                dfMultOil = dfMultOil*6.2898
+        if len(choosen_filtered_fields) >= 1:
+            if st.button('Plot Multi Oil graph for filtered fields from formations'):
+                if uniteType_Oil == 'STB':
+                    dfMultOil = dfMultOil*6.2898
 
-            years = mdates.YearLocator()   # every year
-            months = mdates.MonthLocator()  # every month
-            years_fmt = mdates.DateFormatter('%Y')
+                years = mdates.YearLocator()   # every year
+                months = mdates.MonthLocator()  # every month
+                years_fmt = mdates.DateFormatter('%Y')
 
-            yearsxoil = dfMultOil.index.year.to_list()
-            yearsxoil = list(set(yearsxoil))
+                yearsxoil = dfMultOil.index.year.to_list()
+                yearsxoil = list(set(yearsxoil))
 
 
 
-            ax = dfMultOil.plot(figsize=(20,10),x_compat=True);
+                ax = dfMultOil.plot(figsize=(20,10),x_compat=True);
 
-            for year in yearsxoil:
-                plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
-            plt.title('Oil Production');
-            plt.xlabel('Years');
-            if uniteType_Oil == 'STB':
-                plt.ylabel('Production Rate (STB/Month)');
-            else:
-                plt.ylabel('Production Rate (MSm3/Month)');
+                for year in yearsxoil:
+                    plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
+                plt.title('Oil Production');
+                plt.xlabel('Years');
+                if uniteType_Oil == 'STB':
+                    plt.ylabel('Production Rate (STB/Month)');
+                else:
+                    plt.ylabel('Production Rate (MSm3/Month)');
 
-            # format the ticks
-            ax.xaxis.set_major_locator(years)
-            ax.xaxis.set_major_formatter(years_fmt)
-            ax.xaxis.set_minor_locator(months)
+                # format the ticks
+                ax.xaxis.set_major_locator(years)
+                ax.xaxis.set_major_formatter(years_fmt)
+                ax.xaxis.set_minor_locator(months)
 
-            # round to nearest years.
-            datemin = np.datetime64(dfMultOil.index[0], 'Y')
-            datemax = np.datetime64(list(dfMultOil.index)[-2], 'Y') + np.timedelta64(1, 'Y')
-            ax.set_xlim(datemin, datemax)
+                # round to nearest years.
+                datemin = np.datetime64(dfMultOil.index[0], 'Y')
+                datemax = np.datetime64(list(dfMultOil.index)[-2], 'Y') + np.timedelta64(1, 'Y')
+                ax.set_xlim(datemin, datemax)
 
-            ax.grid(axis='both', which='both')
-            plt.savefig(final_directory + '/' + ' multiple fields oil rate year.png')
-            st.pyplot()
+                ax.grid(axis='both', which='both')
+                plt.savefig(final_directory + '/' + ' multiple fields oil rate year.png')
+                st.pyplot()
 
-            # months indexes
-            dfMultOilShifted = dfMultOil.copy()
-            dfMultOilShifted = dfMultOilShifted.apply(lambda x: pd.Series(x.dropna().values))
+                # months indexes
+                dfMultOilShifted = dfMultOil.copy()
+                dfMultOilShifted = dfMultOilShifted.apply(lambda x: pd.Series(x.dropna().values))
 
-            # plot
-            ax = dfMultOilShifted.reset_index(drop=True).plot(figsize=(20,10),x_compat=True);
-            plt.xlabel('Months');
+                # plot
+                ax = dfMultOilShifted.reset_index(drop=True).plot(figsize=(20,10),x_compat=True);
+                plt.xlabel('Months');
 
-            for tick in np.arange(0, dfMultOilShifted.shape[0] +1, 12):
-                plt.axvline(tick,color='black',linewidth=1)
+                for tick in np.arange(0, dfMultOilShifted.shape[0] +1, 12):
+                    plt.axvline(tick,color='black',linewidth=1)
 
-            minor_locator = FixedLocator(dfMultOilShifted.reset_index(drop=True).index.to_list())
-            ax.xaxis.set_minor_locator(minor_locator)
+                minor_locator = FixedLocator(dfMultOilShifted.reset_index(drop=True).index.to_list())
+                ax.xaxis.set_minor_locator(minor_locator)
 
-            plt.title('Oil Production');
-            #plt.xlabel('Time');
-            if uniteType_Oil == 'STB':
-                plt.ylabel('Production Rate (STB/Month)');
-            else:
-                plt.ylabel('Production Rate (MSm3/Month)');
+                plt.title('Oil Production');
+                #plt.xlabel('Time');
+                if uniteType_Oil == 'STB':
+                    plt.ylabel('Production Rate (STB/Month)');
+                else:
+                    plt.ylabel('Production Rate (MSm3/Month)');
 
-            # round
-            datemin = 0
-            datemax = dfMultOilShifted.shape[0]
-            ax.set_xlim(datemin, datemax)
+                # round
+                datemin = 0
+                datemax = dfMultOilShifted.shape[0]
+                ax.set_xlim(datemin, datemax)
 
-            plt.xticks(np.arange(0, dfMultOilShifted.shape[0] +1, 12))
+                plt.xticks(np.arange(0, dfMultOilShifted.shape[0] +1, 12))
 
-            ax.grid(axis='both', which='both')
-            plt.savefig(final_directory + '/' + ' multiple fields oil rate month.png')
-            st.pyplot()
+                ax.grid(axis='both', which='both')
+                plt.savefig(final_directory + '/' + ' multiple fields oil rate month.png')
+                st.pyplot()
