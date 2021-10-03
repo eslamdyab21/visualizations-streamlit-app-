@@ -12,10 +12,10 @@ class plot_wells_status_purpose_content:
 
             plt.xticks(fontsize=5.5, rotation=0)
             plt.ylabel('Number of Wells')
-            if df_wells['wlbContent'].value_counts().rest_index().shape[0] > 10:
+            if df_wells['wlbContent'].value_counts().reset_index().shape[0] > 10:
                 plt.xticks(fontsize=8)
                 plt.xticks(rotation=90)
-            elif df_wells['wlbContent'].value_counts().rest_index().shape[0] < 8:
+            elif df_wells['wlbContent'].value_counts().reset_index().shape[0] < 8:
                 plt.xticks(fontsize=6)
             plt.title(userValue + ' Wellbore Content');
             plt.savefig(final_directory + '/' + userValue + " Wellbore Content Histogram.png")
