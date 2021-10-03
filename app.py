@@ -736,7 +736,7 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
 
     filterdWells.replace(np.nan,'',inplace = True)
 
-    st.dataframe(filterdWells)
+    st.dataframe(filterdWells.reset_index())
     #=================================================================================================================================
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
