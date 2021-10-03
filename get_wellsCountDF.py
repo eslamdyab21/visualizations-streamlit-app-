@@ -204,7 +204,7 @@ class wells:
     def plot_multi_oil(self,filterdWells,dfMultOil,uniteType_Oil,final_directory):
         filtered_fields = list(filterdWells['fldName'].unique())
         choosen_filtered_fields = st.multiselect('Select wanted fields for plotting', filtered_fields,filtered_fields)
-
+        st.text(choosen_filtered_fields)
         if len(choosen_filtered_fields) > 1:
             dfMultOil = dfMultOil[dfMultOil['Field'].isin(choosen_filtered_fields)]
         elif len(choosen_filtered_fields) == 1:
@@ -213,7 +213,7 @@ class wells:
             st.text('No data')
 
         dfMultOil = dfMultOil.pivot(index='Years', columns='Field',values='prfPrdOilGrossMillSm3')
-        if len(choosen_filtered_fields) > 1:
+        if len(choosen_filtered_fields) >= 1:
             if st.button('Plot Multi Oil graph for filtered fields from formations'):
                 if uniteType_Oil == 'STB':
                     dfMultOil = dfMultOil*6.2898
