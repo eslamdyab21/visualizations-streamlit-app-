@@ -203,9 +203,8 @@ class wells:
 
     def plot_multi_oil(self,filterdWells,dfMultOil,uniteType_Oil,final_directory):
         filtered_fields = list(filterdWells['fldName'].unique())
-        choosen_filtered_fields = st.selectbox('Select wanted fields for plotting', filtered_fields,filtered_fields)
-        st.text(filtered_fields)
-        st.text(choosen_filtered_fields)
+        choosen_filtered_fields = st.multiselect('Select wanted fields for plotting', filtered_fields,filtered_fields)
+
         if len(choosen_filtered_fields) > 1:
             dfMultOil = dfMultOil[dfMultOil['Field'].isin(choosen_filtered_fields)]
         elif len(choosen_filtered_fields) == 1:
