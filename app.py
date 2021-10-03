@@ -737,11 +737,10 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
         filterdWells = filterdWells[filterdWells['wlbMainArea'].isin([wlbMainAreaValues[1],wlbMainAreaValues[2]])]
 
     filterdWells.replace(np.nan,'',inplace = True)
-
-    st.dataframe(filterdWells)
-    #st.text(dfMultOil_wells_filter.columns)
-    from get_wellsCountDF import wells
-    wells().plot_multi_oil(filterdWells.reset_index(),dfMultOil_wells_filter,uniteType_Oil,final_directory)
+    if len(formations1Selected) >0 or len(formations2Selected) >0 or len(formations3Selected) >0: 
+        st.dataframe(filterdWells)
+        from get_wellsCountDF import wells
+        wells().plot_multi_oil(filterdWells.reset_index(),dfMultOil_wells_filter,uniteType_Oil,final_directory)
     #=================================================================================================================================
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
