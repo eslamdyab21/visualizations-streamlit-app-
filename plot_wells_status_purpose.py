@@ -244,7 +244,7 @@ class plot_wells_status_purpose_content:
                 plt.xticks(fontsize=4, rotation=0)
                 plt.ylabel('Number of Wells')
                 plt.xlabel('')
-                if statusHist.shape[0] > 10 or or 'OIL/GAS/CONDENSATE' in fluidsListPR or 'GAS/CONDENSATE' in fluidsListPR:
+                if statusHist.shape[0] > 10 or 'OIL/GAS/CONDENSATE' in fluidsListPR or 'GAS/CONDENSATE' in fluidsListPR:
                     plt.xticks(fontsize=8)
                     plt.xticks(rotation=30)
                 elif statusHist.shape[0] < 8:
