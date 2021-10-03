@@ -1,4 +1,5 @@
 import pandas as pd
+pd.options.mode.chained_assignment = None  # default='warn'
 import numpy as np
 import base64
 import seaborn as sb
@@ -10,9 +11,6 @@ import streamlit as st
 import os
 import zipfile
 import shutil
-#import SessionState
-import random
-#session_state = SessionState.get(random_number=random.random())
 import plot_wells_status_purpose
 
 st.set_option('deprecation.showPyplotGlobalUse', False)
