@@ -740,6 +740,7 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
     filterdWells.replace(np.nan,'',inplace = True)
 
     st.dataframe(filterdWells)
+    st.dataframe(dfMultOil_wells_filter)
     from get_wellsCountDF import wells
     wells().plot_multi_oil(filterdWells.reset_index(),dfMultOil_wells_filter,uniteType_Oil,final_directory)
     #=================================================================================================================================
