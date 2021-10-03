@@ -203,6 +203,7 @@ class wells:
 
     def plot_multi_oil(self,filterdWells,dfMultOil,uniteType_Oil,final_directory):
         filtered_fields = list(filterdWells['fldName'].unique())
+        dfMultOil = dfMultOil['fldName'].isin(filtered_fields)
         if st.button('Plot Multi Oil graph for filtered fields from formations'):
             if uniteType_Oil == 'STB':
                 dfMultOil = dfMultOil*6.2898
