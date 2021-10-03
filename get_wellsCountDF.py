@@ -75,7 +75,14 @@ class wells:
         dfProdOILANDGASWellsAllFields = dfProdOILANDGASWellsAllFields.reset_index()
         wellsProdOILANDGAS_dict = dfProdOILANDGASWellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
 
-        #wellsProdOILANDGAS_dict
+        # PRODUCTION GAS/CONDENSATE
+        dfProdGASandCondWellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbPurpose'] == 'PRODUCTION']
+        dfProdGASandCondWellsAllFields = dfProdGASandCondWellsAllFields[dfProdGASandCondWellsAllFields['wlbContent'] == 'GAS/CONDENSATE']
+        dfProdGASandCondWellsAllFields = dfProdGASandCondWellsAllFields.groupby('fldNpdidField')['wlbWellboreName'].count()
+        dfProdGASandCondWellsAllFields = dfProdGASandCondWellsAllFields.reset_index()
+        wellsProdGASandCond_dict = dfProdGASandCondWellsAllFields.set_index('fldNpdidField')['wlbWellboreName'].to_dict()
+
+
 
         # PRODUCTION OIL/GASCONDENSATE
         dfProdOILANDGASCONDENSATEWellsAllFields = dfWellsAllFields[dfWellsAllFields['wlbPurpose'] == 'PRODUCTION']
@@ -141,6 +148,8 @@ class wells:
 
         # NEW CATEGORIES NOT INCLUDED IN THE APPLICATION CODE
         wellsCountDF['wlProdOILANDGASbWellboreName'] = wellsCountDF['fldNpdidField'].map(wellsProdOILANDGAS_dict)
+        wellsCountDF['dfProdGASandCondWellsAllFields'] = wellsCountDF['fldNpdidField'].map(wellsProdGASandCond_dict)
+
         wellsCountDF['wlProdOILANDGASCONDENSATEbWellboreName'] = wellsCountDF['fldNpdidField'].map(wellsProdOILANDGASCONDENSATE_dict)
         wellsCountDF['wlInjWATERANDGASbWellboreName'] = wellsCountDF['fldNpdidField'].map(wellsInjWATERANDGAS_dict)
 
@@ -160,6 +169,8 @@ class wells:
 
         # NEW CATEGORIES NOT INCLUDED IN THE APPLICATION CODE
         wellsCountDF['wlProdOILANDGASbWellboreName'] = wellsCountDF['wlProdOILANDGASbWellboreName'].astype(int)
+        wellsCountDF['dfProdGASandCondWellsAllFields'] = wellsCountDF['dfProdGASandCondWellsAllFields'].astype(int)
+
         wellsCountDF['wlProdOILANDGASCONDENSATEbWellboreName'] = wellsCountDF['wlProdOILANDGASCONDENSATEbWellboreName'].astype(int)
         wellsCountDF['wlInjWATERANDGASbWellboreName'] = wellsCountDF['wlInjWATERANDGASbWellboreName'].astype(int)
 
@@ -171,7 +182,7 @@ class wells:
 
 
         # NEW CATEGORIES NOT INCLUDED IN THE APPLICATION CODE
-        wellsCountDF = wellsCountDF.rename(columns={'wlProdOILANDGASbWellboreName':'production oil/gas','wlProdOILANDGASCONDENSATEbWellboreName':'production oil/gas/condensate','wlInjWATERANDGASbWellboreName':'WAG injection',})
+        wellsCountDF = wellsCountDF.rename(columns={'wlProdOILANDGASbWellboreName':'production oil/gas','dfProdGASandCondWellsAllFields':'production gas/condensate','wlProdOILANDGASCONDENSATEbWellboreName':'production oil/gas/condensate','wlInjWATERANDGASbWellboreName':'WAG injection',})
 
         wellsCountDF = wellsCountDF.rename(columns={'wlProdStatusbWellboreName':'production status "active wells"','wlbInjStatusWellboreName':'injection status "active wells"',})
         wellsCountDF = dfWellsAllFields.drop_duplicates(subset='fldNpdidField', keep="last")[['fldNpdidField', 'fldName']].join(wellsCountDF.set_index('fldNpdidField'), on='fldNpdidField', how='left')
