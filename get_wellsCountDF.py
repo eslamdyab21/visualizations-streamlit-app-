@@ -213,7 +213,7 @@ class wells:
             st.text('No data')
 
         dfMultOil = dfMultOil.pivot(index='Years', columns='Field',values='prfPrdOilGrossMillSm3')
-        if len(choosen_filtered_fields) >= 1:
+        if len(choosen_filtered_fields) > 1:
             if st.button('Plot Multi Oil graph for filtered fields from formations'):
                 if uniteType_Oil == 'STB':
                     dfMultOil = dfMultOil*6.2898
