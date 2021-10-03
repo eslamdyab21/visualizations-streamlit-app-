@@ -73,6 +73,7 @@ lstOil  = st.multiselect('Select fields for first production',lst,['EKOFISK','ST
 dfMultOil = df.copy()
 # change prfInformationCarrier column name
 dfMultOil.rename(columns={'prfInformationCarrier': 'Field'}, inplace=True)
+dfMultOil_wells_filter = dfMultOil.copy()
 dfMultOil = dfMultOil[dfMultOil['Field'].isin(lstOil)].pivot(index='Years', columns='Field', values='prfPrdOilGrossMillSm3')
 
 #=================================================== ============ ==================================
@@ -600,6 +601,7 @@ if ans.lower() == 'yes':
     df_new = df_new[(df_new['Years']> statrtTime) & (df_new['Years']< endTime)]
     dft_new = dft_new[(dft_new.index> statrtTime) & (dft_new.index< endTime)]
     dfMultOil = dfMultOil[(dfMultOil.index> statrtTime) & (dfMultOil.index< endTime)]
+    dfMultOil_wells_filter = dfMultOil_wells_filter[(dfMultOil_wells_filter.index > statrtTime) & (dfMultOil_wells_filter.index < endTime)]
     df_new.reset_index(drop=True, inplace=True)
 
 
@@ -736,7 +738,9 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
 
     filterdWells.replace(np.nan,'',inplace = True)
 
-    st.dataframe(filterdWells.reset_index())
+    st.dataframe(filterdWells)
+    from get_wellsCountDF import wells
+    wells().plot_multi_oil(filterdWells.reset_index(),dfMultOil_wells_filter,uniteType_Oil,final_directory)
     #=================================================================================================================================
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
