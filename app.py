@@ -74,6 +74,7 @@ dfMultOil = df.copy()
 # change prfInformationCarrier column name
 dfMultOil.rename(columns={'prfInformationCarrier': 'Field'}, inplace=True)
 dfMultOil_wells_filter = dfMultOil.copy()
+st.text(dfMultOil_wells_filter.columns)
 dfMultOil = dfMultOil[dfMultOil['Field'].isin(lstOil)].pivot(index='Years', columns='Field', values='prfPrdOilGrossMillSm3')
 dfMultOil_wells_filter = dfMultOil_wells_filter.pivot(index='Years', columns='Field', values='prfPrdOilGrossMillSm3')
 
@@ -740,7 +741,7 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
     filterdWells.replace(np.nan,'',inplace = True)
 
     st.dataframe(filterdWells)
-    st.text(dfMultOil_wells_filter.columns)
+    #st.text(dfMultOil_wells_filter.columns)
     from get_wellsCountDF import wells
     wells().plot_multi_oil(filterdWells.reset_index(),dfMultOil_wells_filter,uniteType_Oil,final_directory)
     #=================================================================================================================================
