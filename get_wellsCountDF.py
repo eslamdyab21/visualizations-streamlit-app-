@@ -283,4 +283,4 @@ class wells:
                 ax.grid(axis='both', which='both')
                 plt.savefig(final_directory + '/' + ' multiple fields oil rate month.png')
                 st.pyplot()
-        return filtered_fields,choosen_filtered_fields
+        return list(filterdWells['fldName'].unique()),choosen_filtered_fields
