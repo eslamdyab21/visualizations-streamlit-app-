@@ -66,7 +66,7 @@ df,dft,lst,df1Hist,df2Hist,df_Wellbore_development,df_Field_Reserves,df_Wellbore
 
 #=================================================== Multiple oil ==================================
 # Multiselect
-lstOil  = st.multiselect('Select fields for first production',lst,['EKOFISK','STATFJORD','TROLL'])
+#lstOil  = st.multiselect('Select fields for first production',lst,['EKOFISK','STATFJORD','TROLL'])
 
 dfMultOil = df.copy()
 # change prfInformationCarrier column name
