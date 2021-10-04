@@ -405,7 +405,7 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
     if len(formations1Selected) >0 or len(formations2Selected) >0 or len(formations3Selected) >0:
         st.dataframe(filterdWells)
         from get_wellsCountDF import wells
-        filtered_fields,choosen_filtered_fields = wells().plot_multi_oil(filterdWells.reset_index(),dfMultOil_wells_filter,uniteType_Oil,final_directory)
+        choosen_filtered_fields = wells().plot_multi_oil(filterdWells.reset_index(),dfMultOil_wells_filter,uniteType_Oil,final_directory)
     #=================================================================================================================================
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
