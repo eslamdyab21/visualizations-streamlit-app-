@@ -26,7 +26,7 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
     return href
 
 class group_plot:
-    def plot(self,userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas):
+    def plot(self,yearsORmoths,userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas):
         # =====================================MultiOil=======================================================
         if ('OIL' in userValues):
             if uniteType_Oil == 'STB':
@@ -38,73 +38,75 @@ class group_plot:
 
             yearsxoil = dfMultOil.index.year.to_list()
             yearsxoil = list(set(yearsxoil))
+            if yearsORmoths == 'years':
+                ax = dfMultOil.plot(figsize=(20, 10), x_compat=True);
 
-            ax = dfMultOil.plot(figsize=(20, 10), x_compat=True);
+                for year in yearsxoil:
+                    plt.axvline(pd.Timestamp(str(year)), color='black', linewidth=1)
+                plt.title('Oil Production');
+                plt.xlabel('Years');
+                if uniteType_Oil == 'STB':
+                    plt.ylabel('Production Rate (STB/Month)');
+                else:
+                    plt.ylabel('Production Rate (MSm3/Month)');
 
-            for year in yearsxoil:
-                plt.axvline(pd.Timestamp(str(year)), color='black', linewidth=1)
-            plt.title('Oil Production');
-            plt.xlabel('Years');
-            if uniteType_Oil == 'STB':
-                plt.ylabel('Production Rate (STB/Month)');
-            else:
-                plt.ylabel('Production Rate (MSm3/Month)');
+                # format the ticks
+                ax.xaxis.set_major_locator(years)
+                ax.xaxis.set_major_formatter(years_fmt)
+                ax.xaxis.set_minor_locator(months)
 
-            # format the ticks
-            ax.xaxis.set_major_locator(years)
-            ax.xaxis.set_major_formatter(years_fmt)
-            ax.xaxis.set_minor_locator(months)
+                # round to nearest years.
+                datemin = np.datetime64(dfMultOil.index[0], 'Y')
+                datemax = np.datetime64(list(dfMultOil.index)[-2], 'Y') + np.timedelta64(1, 'Y')
+                ax.set_xlim(datemin, datemax)
 
-            # round to nearest years.
-            datemin = np.datetime64(dfMultOil.index[0], 'Y')
-            datemax = np.datetime64(list(dfMultOil.index)[-2], 'Y') + np.timedelta64(1, 'Y')
-            ax.set_xlim(datemin, datemax)
+                ax.grid(axis='both', which='both')
+                plt.savefig(final_directory + '/' + ' multiple fields oil rate year.png')
+                st.pyplot()
 
-            ax.grid(axis='both', which='both')
-            plt.savefig(final_directory + '/' + ' multiple fields oil rate year.png')
-            st.pyplot()
+            elif yearsORmoths == 'months':
+                # months indexes
+                dfMultOilShifted = dfMultOil.copy()
+                dfMultOilShifted = dfMultOilShifted.apply(lambda x: pd.Series(x.dropna().values))
 
-            # months indexes
-            dfMultOilShifted = dfMultOil.copy()
-            dfMultOilShifted = dfMultOilShifted.apply(lambda x: pd.Series(x.dropna().values))
+                # plot
+                ax = dfMultOilShifted.reset_index(drop=True).plot(figsize=(20, 10), x_compat=True);
+                plt.xlabel('Months');
 
-            # plot
-            ax = dfMultOilShifted.reset_index(drop=True).plot(figsize=(20, 10), x_compat=True);
-            plt.xlabel('Months');
+                for tick in np.arange(0, dfMultOilShifted.shape[0] + 1, 12):
+                    plt.axvline(tick, color='black', linewidth=1)
 
-            for tick in np.arange(0, dfMultOilShifted.shape[0] + 1, 12):
-                plt.axvline(tick, color='black', linewidth=1)
+                minor_locator = FixedLocator(dfMultOilShifted.reset_index(drop=True).index.to_list())
+                ax.xaxis.set_minor_locator(minor_locator)
 
-            minor_locator = FixedLocator(dfMultOilShifted.reset_index(drop=True).index.to_list())
-            ax.xaxis.set_minor_locator(minor_locator)
+                plt.title('Oil Production');
+                # plt.xlabel('Time');
+                if uniteType_Oil == 'STB':
+                    plt.ylabel('Production Rate (STB/Month)');
+                else:
+                    plt.ylabel('Production Rate (MSm3/Month)');
 
-            plt.title('Oil Production');
-            # plt.xlabel('Time');
-            if uniteType_Oil == 'STB':
-                plt.ylabel('Production Rate (STB/Month)');
-            else:
-                plt.ylabel('Production Rate (MSm3/Month)');
+                # round
+                datemin = 0
+                datemax = dfMultOilShifted.shape[0]
+                ax.set_xlim(datemin, datemax)
 
-            # round
-            datemin = 0
-            datemax = dfMultOilShifted.shape[0]
-            ax.set_xlim(datemin, datemax)
+                plt.xticks(np.arange(0, dfMultOilShifted.shape[0] + 1, 12))
 
-            plt.xticks(np.arange(0, dfMultOilShifted.shape[0] + 1, 12))
-
-            ax.grid(axis='both', which='both')
-            plt.savefig(final_directory + '/' + ' multiple fields oil rate month.png')
-            st.pyplot()
+                ax.grid(axis='both', which='both')
+                plt.savefig(final_directory + '/' + ' multiple fields oil rate month.png')
+                st.pyplot()
 
         # ============================================================================================
 
         if len(graphNum) != 1:
-            # ploting with Fluid Production
-            plot_multi_helper().plotMult1(df_new, dft_new, 'yes',graphNum,answer,mfluids,yearsx,userValues,userValue,final_directory,mcolors)
-
-            # Trim Oil date Graph
-            if ('OIL' in userValues):
-                plot_multi_helper().plotMult1(df_new, dft_new, 'no',graphNum,answer,mfluids,yearsx,userValues,userValue,final_directory,mcolors)
+            if yearsORmoths == 'years':
+                # ploting with Fluid Production
+                plot_multi_helper().plotMult1(df_new, dft_new, 'yes',graphNum,answer,mfluids,yearsx,userValues,userValue,final_directory,mcolors)
+            elif yearsORmoths == 'months':
+                # Trim Oil date Graph
+                if ('OIL' in userValues):
+                    plot_multi_helper().plotMult1(df_new, dft_new, 'no',graphNum,answer,mfluids,yearsx,userValues,userValue,final_directory,mcolors)
 
         def plotMult2(df_newcSUM, dftt_newcSUM, xtime):
             # ploting time with Fluid Production
@@ -182,12 +184,13 @@ class group_plot:
                         plt.savefig(final_directory + '/' + userValue + ' field cumulative production month.png')
                         st.pyplot()
 
-        #  ploting time with Fluid Production
-        plotMult2(df_newcSUM, dftt_newcSUM, 'yes')
-
-        # Trim Oil date Graph
-        if ('OIL' in userValues):
-            plotMult2(df_newcSUM, dftt_newcSUM, 'no')
+        if yearsORmoths == 'years':
+            #  ploting time with Fluid Production
+            plotMult2(df_newcSUM, dftt_newcSUM, 'yes')
+        elif yearsORmoths == 'months':
+            # Trim Oil date Graph
+            if ('OIL' in userValues):
+                plotMult2(df_newcSUM, dftt_newcSUM, 'no')
 
         def plotMultiy1(dft_new, xtime):
             userValuesclr = userValues.copy()
@@ -211,12 +214,14 @@ class group_plot:
                         plt.savefig(final_directory + '/' + userValue + ' field production month multy.png')
                         st.pyplot()
 
-        # ploting time with Fluid Production (Multiple y-axis)
-        plotMultiy1(dft_new, 'yes')
+        if yearsORmoths == 'years':
+            # ploting time with Fluid Production (Multiple y-axis)
+            plotMultiy1(dft_new, 'yes')
+        elif yearsORmoths == 'months':
+            # ploting time with Fluid Production (Multiple y-axis)(indexes)
+            if ('OIL' in userValues):
+                plotMultiy1(dft_new.reset_index(drop=True), 'no')
 
-        # ploting time with Fluid Production (Multiple y-axis)(indexes)
-        if ('OIL' in userValues):
-            plotMultiy1(dft_new.reset_index(drop=True), 'no')
 
         def plotMultiy2(dftt_newcSUM, xtime):
             # ploting time with Fluid Production (Multiple y-axis)
@@ -245,11 +250,12 @@ class group_plot:
                         st.pyplot()
 
         # ploting time with Fluid Production (Multiple y-axis)
-        plotMultiy2(dftt_newcSUM, 'yes')
-
+        if yearsORmoths == 'years':
+            plotMultiy2(dftt_newcSUM, 'yes')
+        elif yearsORmoths == 'months':
         # ploting time with Fluid Production (Multiple y-axis)(indexes)
-        if ('OIL' in userValues):
-            plotMultiy2(dftt_newcSUM.reset_index(drop=True), 'no')
+            if ('OIL' in userValues):
+                plotMultiy2(dftt_newcSUM.reset_index(drop=True), 'no')
 
         # create plots download link
         zipf = zipfile.ZipFile('Group Plots.zip', 'w', zipfile.ZIP_DEFLATED)
