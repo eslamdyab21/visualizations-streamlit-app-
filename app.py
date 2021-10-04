@@ -405,7 +405,7 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
     if len(formations1Selected) >0 or len(formations2Selected) >0 or len(formations3Selected) >0:
         st.dataframe(filterdWells)
         from get_wellsCountDF import wells
-        wells().plot_multi_oil(filterdWells.reset_index(),dfMultOil_wells_filter,uniteType_Oil,final_directory)
+        filtered_fields,choosen_filtered_fields = wells().plot_multi_oil(filterdWells.reset_index(),dfMultOil_wells_filter,uniteType_Oil,final_directory)
     #=================================================================================================================================
 
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -485,14 +485,14 @@ if st.button('Plot Group Graphs - Years'):
     st.header('Group Graphs')
     groupORindiv = 'group'
     from group_plot import group_plot
-    group_plot().plot(dfMultOil,'years',userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
+    group_plot().plot(dfMultOil,filtered_fields,choosen_filtered_fields,'years',userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
     #===============================================================================================================================================================#
 
 if st.button('Plot Group Graphs - Months'):
     st.header('Group Graphs')
     groupORindiv = 'group'
     from group_plot import group_plot
-    group_plot().plot(dfMultOil,'months',userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
+    group_plot().plot(dfMultOil,filtered_fields,choosen_filtered_fields,'months',userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
     #===============================================================================================================================================================#
 
 if (answer == 'individual' or answer =='both' or len(graphNum) ==1):
