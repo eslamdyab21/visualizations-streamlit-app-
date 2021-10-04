@@ -30,7 +30,7 @@ class group_plot:
         # =====================================MultiOil=======================================================
         if len(choosen_filtered_fields) > 1:
             dfMultOil = dfMultOil[dfMultOil['Field'].isin(choosen_filtered_fields)]
-        elif len(wells().choosen_filtered_fields) == 1:
+        elif len(choosen_filtered_fields) == 1:
             dfMultOil = dfMultOil[dfMultOil['Field'] == choosen_filtered_fields[0]]
         else:
             st.text('No data')
