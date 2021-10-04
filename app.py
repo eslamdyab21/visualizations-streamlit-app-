@@ -68,12 +68,10 @@ df,dft,lst,df1Hist,df2Hist,df_Wellbore_development,df_Field_Reserves,df_Wellbore
 # Multiselect
 lstOil  = st.multiselect('Select fields for first production',lst,['EKOFISK','STATFJORD','TROLL'])
 
-#dfMultOil = df.copy()
-dfMultOil_wells_filter = df.copy()
+dfMultOil = df.copy()
 # change prfInformationCarrier column name
-#dfMultOil.rename(columns={'prfInformationCarrier': 'Field'}, inplace=True)
-dfMultOil_wells_filter.rename(columns={'prfInformationCarrier': 'Field'}, inplace=True)
-#dfMultOil_wells_filter = dfMultOil.copy()
+dfMultOil.rename(columns={'prfInformationCarrier': 'Field'}, inplace=True)
+dfMultOil_wells_filter = dfMultOil.copy()
 #dfMultOil = dfMultOil[dfMultOil['Field'].isin(lstOil)].pivot(index='Years', columns='Field', values='prfPrdOilGrossMillSm3')
 
 #=================================================== ============ ==================================
@@ -267,7 +265,7 @@ if ans.lower() == 'yes':
     endTime = endTime + '-' + '02'
     df_new = df_new[(df_new['Years']> statrtTime) & (df_new['Years']< endTime)]
     dft_new = dft_new[(dft_new.index> statrtTime) & (dft_new.index< endTime)]
-    #dfMultOil = dfMultOil[(dfMultOil.index> statrtTime) & (dfMultOil.index< endTime)]
+    dfMultOil = dfMultOil[(dfMultOil.index> statrtTime) & (dfMultOil.index< endTime)]
     dfMultOil_wells_filter = dfMultOil_wells_filter[(dfMultOil_wells_filter.index > statrtTime) & (dfMultOil_wells_filter.index < endTime)]
     df_new.reset_index(drop=True, inplace=True)
 
@@ -487,14 +485,14 @@ if st.button('Plot Group Graphs - Years'):
     st.header('Group Graphs')
     groupORindiv = 'group'
     from group_plot import group_plot
-    group_plot().plot('years',userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
+    group_plot().plot(dfMultOil,'years',userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
     #===============================================================================================================================================================#
 
 if st.button('Plot Group Graphs - Months'):
     st.header('Group Graphs')
     groupORindiv = 'group'
     from group_plot import group_plot
-    group_plot().plot('months',userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
+    group_plot().plot(dfMultOil,'months',userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
     #===============================================================================================================================================================#
 
 if (answer == 'individual' or answer =='both' or len(graphNum) ==1):
