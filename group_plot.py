@@ -26,9 +26,8 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
     return href
 
 class group_plot:
-    def plot(self,dfMultOil,yearsORmoths,userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas):
+    def plot(self,dfMultOil,filtered_fields,choosen_filtered_fields,yearsORmoths,userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas):
         # =====================================MultiOil=======================================================
-        filtered_fields,choosen_filtered_fields = wells().return_filterd_fields()
         if len(choosen_filtered_fields) > 1:
             dfMultOil = dfMultOil[dfMultOil['Field'].isin(choosen_filtered_fields)]
         elif len(wells().choosen_filtered_fields) == 1:
