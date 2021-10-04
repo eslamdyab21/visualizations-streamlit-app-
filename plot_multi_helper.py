@@ -90,7 +90,7 @@ class plot_multi_helper:
                     st.pyplot()
 
 
-    def plot_multi2(data, userValues, xtime, cols=None, spacing=.05, **kwargs):
+    def plot_multi2(self,data, userValues, xtime, cols=None, spacing=.05, **kwargs):
 
         # Get default color style from pandas - can be changed to any other color list
         if cols is None: cols = data.columns
@@ -348,7 +348,7 @@ class plot_multi_helper:
         ax.legend(lines, labels, loc=0)
         return ax
 
-    def plot_multi4(data, userValues, cols=None, spacing=.05, **kwargs):
+    def plot_multi4(self,data, userValues, cols=None, spacing=.05, **kwargs):
 
         # Get default color style from pandas - can be changed to any other color list
         if cols is None: cols = data.columns
