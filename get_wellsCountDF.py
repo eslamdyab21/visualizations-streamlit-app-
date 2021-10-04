@@ -283,3 +283,6 @@ class wells:
                 ax.grid(axis='both', which='both')
                 plt.savefig(final_directory + '/' + ' multiple fields oil rate month.png')
                 st.pyplot()
+
+    def return_filterd_fields(self):
+        return self.filtered_fields,self.choosen_filtered_fields
