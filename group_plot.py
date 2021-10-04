@@ -26,7 +26,7 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
     return href
 
 class group_plot:
-    def plot(self,dfMultOil,filtered_fields,choosen_filtered_fields,yearsORmoths,userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas):
+    def plot(self,dfMultOil,choosen_filtered_fields,yearsORmoths,userValues,userValue,uniteType_Oil,graphNum,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas):
         # =====================================MultiOil=======================================================
         if len(choosen_filtered_fields) > 1:
             dfMultOil = dfMultOil[dfMultOil['Field'].isin(choosen_filtered_fields)]
@@ -35,10 +35,11 @@ class group_plot:
         else:
             st.text('No data')
 
+        fields_lst = list(dfMultOil['Field'].unique())
         dfMultOil = dfMultOil.pivot(index='Years', columns='Field', values='prfPrdOilGrossMillSm3')
-        st.text(filtered_fields)
+        st.text(fields_lst)
         st.text(choosen_filtered_fields)
-        if choosen_filtered_fields != filtered_fields and len(choosen_filtered_fields) >= 1:
+        if choosen_filtered_fields != fields_lst and len(choosen_filtered_fields) >= 1:
             if ('OIL' in userValues):
                 if uniteType_Oil == 'STB':
                     dfMultOil = dfMultOil * 6.2898
