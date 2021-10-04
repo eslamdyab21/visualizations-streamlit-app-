@@ -10,7 +10,7 @@ import streamlit as st
 import os
 import zipfile
 import shutil
-
+from plot_multi_helper import plot_multi_helper
 st.set_page_config(layout="wide")
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
@@ -61,6 +61,7 @@ def load_data():
 
 
 #Load data
+
 df,dft,lst,df1Hist,df2Hist,df_Wellbore_development,df_Field_Reserves,df_Wellbore_Exploration_All = load_data()
 
 #=================================================== Multiple oil ==================================
@@ -92,7 +93,7 @@ df_Wellbore_Exploration_All_and_Reserves = pd.merge(df_new, df_Field_Reserves, h
 df_Wellbore_Exploration_All_and_Reserves.drop(['fldRecoverableOil','fldRecoverableGas','fldRecoverableNGL','fldRecoverableCondensate','fldRecoverableOE','fldRemainingOil','fldRemainingGas','fldRemainingNGL','fldRemainingCondensate','fldRemainingOE','fldDateOffResEstDisplay','DatesyncNPD'], axis=1, inplace=True)
 #===================================================================================================
 # dropdown selecttion
-selection = st.selectbox('Select a field for detailed production analysis',lst) 
+selection = st.selectbox('Select a field for detailed production analysis',lst)
 userValue = selection
 
 df_new = df[df['prfInformationCarrier'] == userValue]
@@ -106,7 +107,7 @@ Columns = {'OIL':'prfPrdOilGrossMillSm3', 'GAS': 'prfPrdGasGrossBillSm3','CONDEN
            'OE': 'prfPrdOeGrossMillSm3', 'WATER': 'prfPrdProducedWaterInFieldMillSm3' }
 
 # dropdown Unite selection for Oil unit
-uniteType_Oil = st.selectbox('Select oil production unit',['Sm3','STB']) 
+uniteType_Oil = st.selectbox('Select oil production unit',['Sm3','STB'])
 
 # dropdown Unite selection for Gas unit
 uniteType_Gas = st.selectbox('Select gas production unit',['Sm3','ft3'])
@@ -247,345 +248,12 @@ with st.beta_expander('Display/hide histograms',True):
     col2.pyplot()
 
 #==========================================================================================================================================================================
-
-def plot_multi2(data,userValues,xtime, cols=None, spacing=.05, **kwargs):
-
-
-    # Get default color style from pandas - can be changed to any other color list
-    if cols is None: cols = data.columns
-    if len(cols) == 0: return
-
-    del userValues[-1]
-    colors = userValues.copy()
-
-    for fluid in userValues:
-        if fluid == 'OIL':
-            colors[userValues.index('OIL')] = 'green'
-        elif fluid == 'GAS':
-            colors[userValues.index('GAS')] = 'red'
-        elif fluid == 'WATER':
-            colors[userValues.index('WATER')] = 'blue'
-        elif fluid == 'OE':
-            colors[userValues.index('OE')] = 'black'
-        elif fluid == 'CONDENSATE':
-            colors[userValues.index('CONDENSATE')] = 'orange'
-        elif fluid == 'cumulative':
-            #colors[userValues.index('cumulative')] = 'magenta'
-            colors[userValues.index('cumulative')] = colors[0]
-
-    if xtime == 'yes':
-        years = mdates.YearLocator()   # every year
-        months = mdates.MonthLocator()  # every month
-        years_fmt = mdates.DateFormatter('%Y')
-
-    # First axis
-    ax = data.loc[:, cols[0]].plot(x_compat=True,label=cols[0], color=colors[0], **kwargs)
-    if xtime == 'no':
-        plt.xlabel('Months');
-
-    if xtime == 'yes':
-        # round to nearest years.
-        datemin = np.datetime64(data.index[0], 'Y')
-        datemax = np.datetime64(list(data.index)[-2], 'Y') + np.timedelta64(1, 'Y')
-        ax.set_xlim(datemin, datemax)
-    else:
-        # round 
-        datemin = 0
-        datemax = data.shape[0]
-        ax.set_xlim(datemin, datemax)
-
-        ax.tick_params(which='major', width=1)
-        ax.tick_params(which='major', length=7)
-        plt.xticks(np.arange(0, data.shape[0] +1, 12))
-    ax.grid(axis='both', which='both')
-
-    if (cols[0] == 'GAS' or  cols[0] == 'GAS Cumulative Production'):
-        ax.set_ylabel(ylabel=cols[0]+ ' (BSm3)')
-    else:
-        ax.set_ylabel(ylabel=cols[0]+ ' (MSm3)')
-
-    lines, labels = ax.get_legend_handles_labels()
-
-    for n in range(1, len(cols)):
-        # Multiple y-axes
-        ax_new = ax.twinx()
-        ax_new.spines['right'].set_position(('axes', 1 + spacing * (n - 1)))
-        if (colors[0]== colors[1]):
-            data.loc[:, cols[n]].plot(ax=ax_new,x_compat=True, label=cols[n],linestyle='--', dashes=(5, 10), color=colors[n % len(colors)], **kwargs)
-        else:
-            data.loc[:, cols[n]].plot(ax=ax_new,x_compat=True, label=cols[n], color=colors[n % len(colors)], **kwargs)
-
-        if (cols[n] == 'GAS'  or  cols[n] == 'GAS Cumulative Production'):
-            ax_new.set_ylabel(ylabel=cols[n]+ ' (BSm3)')
-        else:
-            ax_new.set_ylabel(ylabel=cols[n]+ ' (MSm3)')
-        
-        # Proper legend position
-        line, label = ax_new.get_legend_handles_labels()
-        lines += line
-        labels += label
-
-    if xtime == 'yes':
-        # format the ticks
-        ax.xaxis.set_major_locator(years)
-        ax.xaxis.set_major_formatter(years_fmt)
-        ax.xaxis.set_minor_locator(months)
-    else:
-        minor_locator = FixedLocator(data.index.to_list())
-        ax.xaxis.set_minor_locator(minor_locator)
-
-    ax.legend(lines, labels, loc=0)
-    return ax
+#plot_multi2
 
 groupORindiv = 'chose'
-def plot_multi3(data,userValues,xtime, cols=None, spacing=.05, **kwargs):
+#plot_multi3
 
-
-    # Get default color style from pandas - can be changed to any other color list
-    if cols is None: cols = data.columns
-    if len(cols) == 0: return
-
-    del userValues[-1]
-    colors = userValues.copy()
-
-    for fluid in userValues:
-        if fluid == 'OIL':
-            colors[userValues.index('OIL')] = 'green'
-        elif fluid == 'GAS':
-            colors[userValues.index('GAS')] = 'red'
-        elif fluid == 'WATER':
-            colors[userValues.index('WATER')] = 'blue'
-        elif fluid == 'OE':
-            colors[userValues.index('OE')] = 'black'
-        elif fluid == 'CONDENSATE':
-            colors[userValues.index('CONDENSATE')] = 'orange'
-        elif fluid == 'cumulative':
-            #colors[userValues.index('cumulative')] = 'magenta'
-            colors[userValues.index('cumulative')] = colors[0]
-
-    if xtime == 'yes':
-        years = mdates.YearLocator()   # every year
-        months = mdates.MonthLocator()  # every month
-        years_fmt = mdates.DateFormatter('%Y')
-
-    # First axis
-    ax = data.loc[:, cols[0]].plot(x_compat=True,label=cols[0], color=colors[0], **kwargs)
-    if xtime == 'no':
-        plt.xlabel('Months');
-    # format the ticks
-
-    # round to nearest years.
-    if xtime == 'yes':
-        datemin = np.datetime64(data.index[0], 'Y')
-        datemax = np.datetime64(list(data.index)[-2], 'Y') + np.timedelta64(1, 'Y')
-        ax.set_xlim(datemin, datemax)
-
-    else:
-        # round 
-        datemin = 0
-        datemax = data.shape[0]
-        ax.set_xlim(datemin, datemax)
-
-        ax.tick_params(which='major', width=1)
-        ax.tick_params(which='major', length=7)
-        plt.xticks(np.arange(0, data.shape[0] +1, 12))
-
-    ax.grid(axis='both', which='both')
-
-    if groupORindiv == 'indiv':
-        if (cols[0] == 'GAS'):
-            if uniteType_Gas == 'ft3':
-                ax.set_ylabel(ylabel=cols[0]+ ' Production Rate (Bft3/Month)')
-            else:
-                ax.set_ylabel(ylabel=cols[0]+ ' Production Rate (BSm3/Month)')
-        elif (cols[0] == 'GAS Cumulative'):
-            if uniteType_Gas == 'ft3':
-                ax.set_ylabel(ylabel=cols[0]+ ' Production (Bft3)')
-            else:
-                ax.set_ylabel(ylabel=cols[0]+ ' Production (BSm3)')
-        elif (cols[0] == 'OIL Cumulative'):
-            if uniteType_Oil == 'STB':
-                ax.set_ylabel(ylabel=cols[0]+ ' Production (MSTB)')
-            else:
-                ax.set_ylabel(ylabel=cols[0]+ ' Production (MSm3)')
-        elif (cols[0] == 'OIL'):
-            if uniteType_Oil == 'STB':
-                ax.set_ylabel(ylabel=cols[0]+ ' Production Rate (MSTB/Month)')
-            else:
-                ax.set_ylabel(ylabel=cols[0]+ ' Production Rate (MSm3/Month)')
-        elif (cols[0] == 'WATER Cumulative'):
-            ax.set_ylabel(ylabel=cols[0]+ ' Production (MSm3)')
-        elif (cols[0] == 'OE Cumulative'):
-            ax.set_ylabel(ylabel=cols[0]+ ' Production (MSm3)')
-        elif (cols[0] == 'CONDENSATE Cumulative'):
-            ax.set_ylabel(ylabel=cols[0]+ ' Production (MSm3)')
-        else:
-            ax.set_ylabel(ylabel=cols[0]+ ' Production Rate (MSm3/Month)')
-
-    else:
-        if (cols[0] == 'GAS'):
-            ax.set_ylabel(ylabel=cols[0]+ ' Production Rate (BSm3/Month)')
-        elif (cols[0] == 'GAS Cumulative'):
-            ax.set_ylabel(ylabel=cols[0]+ ' Production (BSm3)')
-        elif (cols[0] == 'OIL Cumulative'):
-            ax.set_ylabel(ylabel=cols[0]+ ' Production (MSm3)')
-        elif (cols[0] == 'WATER Cumulative'):
-            ax.set_ylabel(ylabel=cols[0]+ ' Production (MSm3)')
-        elif (cols[0] == 'OE Cumulative'):
-            ax.set_ylabel(ylabel=cols[0]+ ' Production (MSm3)')
-        elif (cols[0] == 'CONDENSATE Cumulative'):
-            ax.set_ylabel(ylabel=cols[0]+ ' Production (MSm3)')
-        else:
-            ax.set_ylabel(ylabel=cols[0]+ ' Production Rate (MSm3/Month)')
-
-    lines, labels = ax.get_legend_handles_labels()
-
-    for n in range(1, len(cols)):
-        # Multiple y-axes
-        ax_new = ax.twinx()
-        ax_new.spines['right'].set_position(('axes', 1 + spacing * (n - 1)))
-        if (colors[0]== colors[1]):
-            data.loc[:, cols[n]].plot(ax=ax_new,x_compat=True, label=cols[n],linestyle='--', dashes=(5, 10), color=colors[n % len(colors)], **kwargs)
-        else:
-            data.loc[:, cols[n]].plot(ax=ax_new,x_compat=True, label=cols[n], color=colors[n % len(colors)], **kwargs)
-
-        if groupORindiv == 'indiv':
-            if (cols[n] == 'GAS'):
-                if uniteType_Gas == 'ft3':
-                    ax_new.set_ylabel(ylabel=cols[n]+ ' Production Rate (Bft3/Month)')
-                else:
-                    ax_new.set_ylabel(ylabel=cols[n]+ ' Production Rate (BSm3/Month)')
-            elif (cols[n] == 'GAS Cumulative'):
-                if uniteType_Gas == 'ft3':
-                    ax_new.set_ylabel(ylabel=cols[n]+ ' Production (Bft3)')
-                else:
-                    ax_new.set_ylabel(ylabel=cols[n]+ ' Production (BSm3)')
-            elif (cols[n] == 'OIL Cumulative'):
-                if uniteType_Oil == 'STB':
-                    ax_new.set_ylabel(ylabel=cols[n]+ ' Production (STB)')
-                else:
-                    ax_new.set_ylabel(ylabel=cols[n]+ ' Production (MSm3)')
-            elif (cols[n] == 'WATER Cumulative'):
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production (MSm3)')
-            elif (cols[n] == 'OE Cumulative'):
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production (MSm3)')
-            elif (cols[n] == 'CONDENSATE Cumulative'):
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production (MSm3)')
-            else:
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production Rate (MSm3/Month)')
-
-        else:
-            if (cols[n] == 'GAS'):
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production Rate (BSm3/Month)')
-            elif (cols[n] == 'GAS Cumulative'):
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production (BSm3)')
-            elif (cols[n] == 'OIL Cumulative'):
-                ax.set_ylabel(ylabel=cols[n]+ ' Production (MSm3)')
-            elif (cols[n] == 'WATER Cumulative'):
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production (MSm3)')
-            elif (cols[n] == 'OE Cumulative'):
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production (MSm3)')
-            elif (cols[n] == 'CONDENSATE Cumulative'):
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production (MSm3)')
-            else:
-                ax_new.set_ylabel(ylabel=cols[n]+ ' Production Rate (MSm3/Month)')
-        
-        # Proper legend position
-        line, label = ax_new.get_legend_handles_labels()
-        lines += line
-        labels += label
-    if xtime == 'yes':
-        ax.xaxis.set_major_locator(years)
-        ax.xaxis.set_major_formatter(years_fmt)
-        ax.xaxis.set_minor_locator(months)
-    else:
-        minor_locator = FixedLocator(data.index.to_list())
-        ax.xaxis.set_minor_locator(minor_locator)
-
-    ax.legend(lines, labels, loc=0)
-    return ax
-
-def plot_multi4(data,userValues, cols=None, spacing=.05, **kwargs):
-
-
-    # Get default color style from pandas - can be changed to any other color list
-    if cols is None: cols = data.columns
-    if len(cols) == 0: return
-
-    #del userValues[-1]
-    colors = userValues.copy()
-
-    for fluid in userValues:
-        if fluid == 'OIL':
-            colors[userValues.index('OIL')] = 'green'
-        elif fluid == 'GAS':
-            colors[userValues.index('GAS')] = 'red'
-        elif fluid == 'WATER':
-            colors[userValues.index('WATER')] = 'blue'
-        elif fluid == 'OE':
-            colors[userValues.index('OE')] = 'black'
-        elif fluid == 'CONDENSATE':
-            colors[userValues.index('CONDENSATE')] = 'orange'
-        elif fluid == 'GOR' or fluid == 'CGR' or fluid == 'WCUT':
-            colors[userValues.index(fluid)] = 'purple'
-
-    years = mdates.YearLocator()   # every year
-    months = mdates.MonthLocator()  # every month
-    years_fmt = mdates.DateFormatter('%Y')
-
-    # First axis
-    ax = data.loc[:, cols[0]].plot(x_compat=True,label=cols[0], color=colors[0], **kwargs)
-    
-    # round to nearest years.
-    datemin = np.datetime64(data.index[0], 'Y')
-    datemax = np.datetime64(list(data.index)[-2], 'Y') + np.timedelta64(1, 'Y')
-    ax.set_xlim(datemin, datemax)
-    ax.grid(axis='both', which='both')
-
-
-    if (cols[0] == 'GAS'):
-        ax.set_ylabel(ylabel=cols[0]+ ' Production Rate (BSm3/Month)')
-    elif (cols[0] == 'GOR'):
-        ax.set_ylabel(ylabel= 'Gas Oil Ratio (fraction)')
-    elif (cols[0] == 'CGR'):
-        ax.set_ylabel(ylabel= 'CONDENSATE GAS Ratio (fraction)')
-    elif (cols[0] == 'WCUT'):
-        ax.set_ylabel(ylabel= 'Water Cut (fraction)')
-    else:
-        ax.set_ylabel(ylabel=cols[0]+ ' Production Rate (MSm3/Month)')
-
-    lines, labels = ax.get_legend_handles_labels()
-
-    for n in range(1, len(cols)):
-        # Multiple y-axes
-        ax_new = ax.twinx()
-        ax_new.spines['right'].set_position(('axes', 1 + spacing * (n - 1)))
-        
-        data.loc[:, cols[n]].plot(ax=ax_new,x_compat=True, label=cols[n], color=colors[n % len(colors)], **kwargs)
-
-        if (cols[n] == 'GAS'):
-            ax_new.set_ylabel(ylabel=cols[n]+ ' Production Rate (BSm3/Month)')
-        elif (cols[n] == 'GOR'):
-            ax.set_ylabel(ylabel= 'Gas Oil Ratio (fraction)')
-        elif (cols[n] == 'CGR'):
-            ax.set_ylabel(ylabel= 'CONDENSATE GAS Ratio (fraction)')
-        elif (cols[n] == 'WCUT'):
-            ax.set_ylabel(ylabel= 'Water Cut (fraction)')
-        else:
-            ax_new.set_ylabel(ylabel=cols[n]+ ' Production Rate (MSm3/Month)')
-        
-        # Proper legend position
-        line, label = ax_new.get_legend_handles_labels()
-        lines += line
-        labels += label
-
-    # format the ticks
-    ax.xaxis.set_major_locator(years)
-    ax.xaxis.set_major_formatter(years_fmt)
-    ax.xaxis.set_minor_locator(months)
-    
-    ax.legend(lines, labels, loc=0)
-    return ax
+#plot_multi4
 
 ans = st.radio('Select time interval for plotting?',('No','Yes'))
 if ans.lower() == 'yes':
@@ -670,7 +338,7 @@ with st.beta_expander('Display/hide NPD field description',False):
     col5.success(str(d['Transport '].values[0]))
 
 #--------------------------------------------------------------------------------------------------------------
-# Show wells table 
+# Show wells table
 #========================================================================================================================================
 with st.beta_expander("Display/hide wells's status and content histogram",False):
 
@@ -678,7 +346,7 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
     df_Wellbore_Exploration_All_and_Reserves = df_Wellbore_Exploration_All_and_Reserves[wantedlst]
     df_Wellbore_Exploration_All_and_Reserves = df_Wellbore_Exploration_All_and_Reserves.set_index('fldName')
     wlbMainAreaValues = list(df_Wellbore_Exploration_All_and_Reserves['wlbMainArea'].unique())
-    
+
     # dropdown selecttion
     #fieldslst = list(df_Wellbore_Exploration_All_and_Reserves.index.unique())
     #selectedfield = st.selectbox('Select a Field to filtter with',fieldslst)
@@ -722,7 +390,7 @@ with st.beta_expander("Display/hide wells's status and content histogram",False)
         filterdWells = filterdWells[filterdWells['wlbMainArea'].isin([wlbMainAreaValues[1]])]
     if option3 and not option2 and not option1:
         filterdWells = filterdWells[filterdWells['wlbMainArea'].isin([wlbMainAreaValues[2]])]
-    
+
     if option1 and option2 and not option3:
         filterdWells = filterdWells[filterdWells['wlbMainArea'].isin([wlbMainAreaValues[0],wlbMainAreaValues[1]])]
     if option1 and option3 and not option2:
@@ -782,7 +450,7 @@ dfcum = df_newcSUM.copy()
 userValuescSum = userValues.copy()
 del userValuescSum[-1]
 
-df_newcSUM = df_newcSUM.drop(columns = userValuescSum) 
+df_newcSUM = df_newcSUM.drop(columns = userValuescSum)
 dftt_newcSUM = dftt_newcSUM.drop(columns = userValuescSum)
 
 
@@ -812,93 +480,12 @@ for fluid in mfluids:
 
 #===============================================================================================================================================================#
 
-def plotMult1(df_new,dft_new,xtime):
-    # ploting time with Fluid Production
-    if graphNum !='1':
-        if (answer == 'group' or answer == 'both'):
-
-            if xtime == 'yes':
-                years = mdates.YearLocator()   # every year
-                months = mdates.MonthLocator()  # every month
-                years_fmt = mdates.DateFormatter('%Y')
-
-                colors2=['green', 'orange','black','blue']
-                ax = df_new[mfluids].set_index('Years').plot(figsize=(25,10), color=mcolors,x_compat=True)
-                plt.ylabel('Fluid Production Rate (MSm3/Month)');
-
-                for year in yearsx:
-                    plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
-
-                if 'GAS' in userValues:
-                    ax2=ax.twinx()
-                    # make a plot with different y-axis using second axis object
-                    ax2.plot(dft_new['GAS'],label="GAS",color="red");
-                    ax2.set_ylabel("GAS Production Rate (BSm3/Month)")   
-                    plt.legend(loc=(0.95,1))
-
-                # format the ticks
-                ax.xaxis.set_major_locator(years)
-                ax.xaxis.set_major_formatter(years_fmt)
-                ax.xaxis.set_minor_locator(months)
-
-                # round to nearest years.
-                datemin = np.datetime64(df_new['Years'][0], 'Y') 
-                datemax = np.datetime64(list(df_new['Years'])[-2], 'Y') +1
-                ax.set_xlim(datemin, datemax)
-
-                ax.tick_params(which='major', width=1)
-                ax.tick_params(which='major', length=7)
-
-                ax.grid(axis='both', which='both')
-
-                plt.title(str(userValue)+ ' Field Production' );
-                plt.savefig(final_directory + '/' + userValue + ' field production year.png') 
-                st.pyplot()
-            else:
-
-                from matplotlib.ticker import FixedLocator
-
-                colors2=['green', 'orange','black','blue']
-                ax = df_new[mfluids].plot(figsize=(25,10), color=mcolors,x_compat=True)
-                plt.ylabel('Fluid Production Rate (MSm3/Month)');
-                plt.xlabel('Months');
-
-                for tick in np.arange(0, df_new.shape[0] +1, 12):
-                    plt.axvline(tick,color='black',linewidth=1)
-
-                if 'GAS' in userValues:
-                    ax2=ax.twinx()
-                    # make a plot with different y-axis using second axis object
-                    ax2.plot(dft_new.reset_index()['GAS'],label="GAS",color="red");
-                    ax2.set_ylabel("GAS Production Rate (BSm3/Month)")   
-                    plt.legend(loc=(0.95,1))
-
-                # format the ticks
-                #minor_locator = AutoMinorLocator(2)
-                minor_locator = FixedLocator(df_new.index.to_list())
-                ax.xaxis.set_minor_locator(minor_locator)
-
-                # round 
-                datemin = 0
-                datemax = df_new.shape[0]
-                ax.set_xlim(datemin, datemax)
-
-                ax.tick_params(which='major', width=1)
-                ax.tick_params(which='major', length=7)
-                plt.xticks(np.arange(0, df_new.shape[0] +1, 12))
-
-                ax.grid(axis='both', which='both')
-
-                plt.title(str(userValue)+ ' Field Production' );
-                plt.xlabel('Months of production')
-                plt.savefig(final_directory + '/' + userValue + ' field production month.png') 
-                st.pyplot()
 
 if st.button('Plot Group Graphs'):
     st.header('Group Graphs')
     groupORindiv = 'group'
     from group_plot import group_plot
-    group_plot().plot(userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx)
+    group_plot().plot(userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids)
     #===============================================================================================================================================================#
 
 
@@ -912,7 +499,7 @@ if (answer == 'individual' or answer =='both' or len(graphNum) ==1):
             dfcSum['GAS'] = dfcSum['GAS']*35.315
         dfcSum = dfcSum[[userValues[-1],userValues[i]]]
         dfcSum.set_index('Years', inplace=True)
-        dfcSum[userValues[i] + ' Cumulative'] = dfcSum[userValues[i]].cumsum()    
+        dfcSum[userValues[i] + ' Cumulative'] = dfcSum[userValues[i]].cumsum()
         lstdf.append(dfcSum)
 
 if st.button('Plot Individual Graphs'):
@@ -931,14 +518,14 @@ if st.button('Plot Individual Graphs'):
         for year in yearsx:
             plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
 
-        plot_multi3(lstdf[0],userValuesclr,'yes', figsize=(20, 10));
+        plot_multi_helper().plot_multi3(groupORindiv,uniteType_Gas,uniteType_Oil,lstdf[0],userValuesclr,'yes', figsize=(20, 10));
 
 
         plt.title(str(userValue)+ ' Field ' + lstdf[0].columns.to_list()[0] + ' Production');
 
-        plt.savefig(final_directory2 + '/' + userValue + ' Field ' + lstdf[0].columns.to_list()[0] + ' Production.png') 
+        plt.savefig(final_directory2 + '/' + userValue + ' Field ' + lstdf[0].columns.to_list()[0] + ' Production.png')
         st.pyplot()
-        
+
 
     if (answer == 'individual' or answer == 'both' or len(graphNum) ==1) and len(userValues)-1>=2:
         userValuesclr = userValues.copy()
@@ -950,11 +537,11 @@ if st.button('Plot Individual Graphs'):
             plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
 
 
-        plot_multi3(lstdf[1],userValuesclr,'yes', figsize=(20, 10));
+        plot_multi_helper().plot_multi3(groupORindiv,uniteType_Gas,uniteType_Oil,lstdf[1],userValuesclr,'yes', figsize=(20, 10));
 
         plt.title(str(userValue)+ ' Field ' + lstdf[1].columns.to_list()[0] + ' Production');
-            
-        plt.savefig(final_directory2 + '/' + userValue + ' Field ' + lstdf[1].columns.to_list()[0] + ' Production.png') 
+
+        plt.savefig(final_directory2 + '/' + userValue + ' Field ' + lstdf[1].columns.to_list()[0] + ' Production.png')
         st.pyplot()
 
     if (answer == 'individual' or answer == 'both' or len(graphNum) ==1) and len(userValues)-1>=3:
@@ -966,11 +553,11 @@ if st.button('Plot Individual Graphs'):
         for year in yearsx:
             plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
 
-        plot_multi3(lstdf[2],userValuesclr,'yes', figsize=(20, 10));
-        
+        plot_multi_helper().plot_multi3(groupORindiv,uniteType_Gas,uniteType_Oil,lstdf[2],userValuesclr,'yes', figsize=(20, 10));
+
         plt.title(str(userValue)+ ' Field ' + lstdf[2].columns.to_list()[0] + ' Production');
-            
-        plt.savefig(final_directory2 + '/' + userValue +  ' Field ' + lstdf[2].columns.to_list()[0] + ' Production.png') 
+
+        plt.savefig(final_directory2 + '/' + userValue +  ' Field ' + lstdf[2].columns.to_list()[0] + ' Production.png')
         st.pyplot()
 
 
@@ -983,11 +570,11 @@ if st.button('Plot Individual Graphs'):
         for year in yearsx:
             plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
 
-        plot_multi3(lstdf[3],userValuesclr,'yes', figsize=(20, 10));
+        plot_multi_helper().plot_multi3(groupORindiv,uniteType_Gas,uniteType_Oil,lstdf[3],userValuesclr,'yes', figsize=(20, 10));
 
         plt.title(str(userValue)+ ' Field ' + lstdf[3].columns.to_list()[0] + ' Production');
-            
-        plt.savefig(final_directory2 + '/' + userValue +  ' Field ' + lstdf[3].columns.to_list()[0] + ' Production.png') 
+
+        plt.savefig(final_directory2 + '/' + userValue +  ' Field ' + lstdf[3].columns.to_list()[0] + ' Production.png')
         st.pyplot()
 
 
@@ -1000,11 +587,11 @@ if st.button('Plot Individual Graphs'):
         for year in yearsx:
             plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
 
-        plot_multi3(lstdf[4],userValuesclr,'yes', figsize=(20, 10));
-        
+        plot_multi_helper().plot_multi3(groupORindiv,uniteType_Gas,uniteType_Oil,lstdf[4],userValuesclr,'yes', figsize=(20, 10));
+
         plt.title(str(userValue)+ ' Field ' + lstdf[4].columns.to_list()[0] + ' Production');
-            
-        plt.savefig(final_directory2 + '/' + userValue  + ' Field ' + lstdf[4].columns.to_list()[0] + ' Production.png') 
+
+        plt.savefig(final_directory2 + '/' + userValue  + ' Field ' + lstdf[4].columns.to_list()[0] + ' Production.png')
         st.pyplot()
 
 
@@ -1084,23 +671,23 @@ if st.button('Plot Calculations Graphs'):
         datemax = np.datetime64(list(lstdfCalc[index]['Years'])[-2], 'Y') + np.timedelta64(1, 'Y')
         ax.set_xlim(datemin, datemax)
 
-            
+
         plt.title(str(userValue)+ ' Gas Oil Ratio');
         plt.xlabel('Years');
         plt.ylabel('Gas Oil Ratio (fraction)');
         ax.grid(axis='both', which='both')
-        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Gas Oil Ratio.png') 
+        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Gas Oil Ratio.png')
         st.pyplot()
 
     elif ('GAS' in userValues) & ('OIL' in userValues) & (userVal == 'yes'):
         colorscalc = ['GOR','GAS','OIL']
         for year in yearsx:
             plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
-            
-        plot_multi4(dfCalc2[['GOR','GAS','OIL']],colorscalc, figsize=(20, 10));
+
+        plot_multi_helper().plot_multi4(dfCalc2[['GOR','GAS','OIL']],colorscalc, figsize=(20, 10));
         plt.title(str(userValue)+ ' Gas Oil Ratio');
         plt.xlabel('Years');
-        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Gas Oil Ratio.png') 
+        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Gas Oil Ratio.png')
         st.pyplot()
 
 
@@ -1128,23 +715,23 @@ if st.button('Plot Calculations Graphs'):
         datemax = np.datetime64(list(lstdfCalc[index]['Years'])[-2], 'Y') + np.timedelta64(1, 'Y')
         ax.set_xlim(datemin, datemax)
 
-            
+
         plt.title(str(userValue)+ ' CONDENSATE GAS Ratio');
         plt.xlabel('Years');
         plt.ylabel('CONDENSATE GAS Ratio (fraction)');
         ax.grid(axis='both', which='both')
-        plt.savefig(final_directory3 + '/' + str(userValue)+ ' CONDENSATE GAS Ratio.png') 
+        plt.savefig(final_directory3 + '/' + str(userValue)+ ' CONDENSATE GAS Ratio.png')
         st.pyplot()
 
     elif ('GAS' in userValues) & ('CONDENSATE' in userValues) & (userVal == 'yes'):
         colorscalc = ['CGR','GAS','CONDENSATE']
         for year in yearsx:
             plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
-            
-        plot_multi4(dfCalc2[['CGR','GAS','CONDENSATE']],colorscalc, figsize=(20, 10));
+
+        plot_multi_helper().plot_multi4(dfCalc2[['CGR','GAS','CONDENSATE']],colorscalc, figsize=(20, 10));
         plt.title(str(userValue)+ ' CONDENSATE GAS Ratio');
         plt.xlabel('Years');
-        plt.savefig(final_directory3 + '/' + str(userValue)+ ' CONDENSATE GAS Ratio.png') 
+        plt.savefig(final_directory3 + '/' + str(userValue)+ ' CONDENSATE GAS Ratio.png')
         st.pyplot()
 
 
@@ -1152,7 +739,7 @@ if st.button('Plot Calculations Graphs'):
     if ('WATER' in userValues) & ('OIL' in userValues):
         userValuesclr = userValues.copy()
         index = calcIndex(lstdfCalc,'WOR')
-    
+
         years = mdates.YearLocator()   # every year
         months = mdates.MonthLocator()  # every month
         years_fmt = mdates.DateFormatter('%Y')
@@ -1172,12 +759,12 @@ if st.button('Plot Calculations Graphs'):
         datemax = np.datetime64(list(lstdfCalc[index]['Years'])[-2], 'Y') + np.timedelta64(1, 'Y')
         ax.set_xlim(datemin, datemax)
 
-            
+
         plt.title(str(userValue)+ ' Water Oil Ratio');
         plt.xlabel('Years');
         plt.ylabel('Water Oil Ratio (fraction)');
         ax.grid(axis='both', which='both')
-        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Water Oil Ratio.png') 
+        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Water Oil Ratio.png')
         st.pyplot()
 
 
@@ -1205,23 +792,23 @@ if st.button('Plot Calculations Graphs'):
         datemax = np.datetime64(list(lstdfCalc[index]['Years'])[-2], 'Y') + np.timedelta64(1, 'Y')
         ax.set_xlim(datemin, datemax)
 
-            
+
         plt.title(str(userValue)+ ' Water Cut');
         plt.xlabel('Years');
         plt.ylabel('Water Cut (fraction)');
         ax.grid(axis='both', which='both')
-        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Water Cut.png') 
+        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Water Cut.png')
         st.pyplot()
 
     elif ('GAS' in userValues) & ('WATER' in userValues) & (userVal == 'yes'):
         colorscalc = ['WCUT','OIL','WATER',]
         for year in yearsx:
             plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
-            
-        plot_multi4(dfCalc2[['WCUT','OIL','WATER']],colorscalc, figsize=(20, 10));
+
+        plot_multi_helper().plot_multi4(dfCalc2[['WCUT','OIL','WATER']],colorscalc, figsize=(20, 10));
         plt.title(str(userValue)+ ' Water Cut');
         plt.xlabel('Years');
-        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Water Cut.png') 
+        plt.savefig(final_directory3 + '/' + str(userValue)+ ' Water Cut.png')
         st.pyplot()
 
     #create plots download link
