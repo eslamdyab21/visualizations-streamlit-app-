@@ -485,7 +485,7 @@ if st.button('Plot Group Graphs'):
     st.header('Group Graphs')
     groupORindiv = 'group'
     from group_plot import group_plot
-    group_plot().plot(userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids)
+    group_plot().plot(userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
     #===============================================================================================================================================================#
 
 
