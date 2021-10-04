@@ -202,32 +202,32 @@ class wells:
 
 
     def plot_multi_oil(self,filterdWells,dfMultOil,uniteType_Oil,final_directory):
-        self.filtered_fields = list(filterdWells['fldName'].unique())
-        self.choosen_filtered_fields = st.multiselect('Select wanted fields for plotting', self.filtered_fields,self.filtered_fields)
+        filtered_fields = list(filterdWells['fldName'].unique())
+        choosen_filtered_fields = st.multiselect('Select wanted fields for plotting', filtered_fields,filtered_fields)
 
-        if len(self.choosen_filtered_fields) > 1:
-            dfMultOil = dfMultOil[dfMultOil['Field'].isin(self.choosen_filtered_fields)]
-        elif len(self.choosen_filtered_fields) == 1:
-            dfMultOil = dfMultOil[dfMultOil['Field'] == self.choosen_filtered_fields[0]]
+        if len(choosen_filtered_fields) > 1:
+            dfMultOil = dfMultOil[dfMultOil['Field'].isin(choosen_filtered_fields)]
+        elif len(choosen_filtered_fields) == 1:
+            dfMultOil = dfMultOil[dfMultOil['Field'] == choosen_filtered_fields[0]]
         else:
             st.text('No data')
 
-        self.dfMultOil = dfMultOil.pivot(index='Years', columns='Field',values='prfPrdOilGrossMillSm3')
-        if len(self.choosen_filtered_fields) >= 1:
+        dfMultOil = dfMultOil.pivot(index='Years', columns='Field',values='prfPrdOilGrossMillSm3')
+        if len(choosen_filtered_fields) >= 1:
             if st.button('Plot Multi Oil graph for filtered fields from formations'):
                 if uniteType_Oil == 'STB':
-                    self.dfMultOil = self.dfMultOil*6.2898
+                    dfMultOil = dfMultOil*6.2898
 
                 years = mdates.YearLocator()   # every year
                 months = mdates.MonthLocator()  # every month
                 years_fmt = mdates.DateFormatter('%Y')
 
-                yearsxoil = self.dfMultOil.index.year.to_list()
+                yearsxoil = dfMultOil.index.year.to_list()
                 yearsxoil = list(set(yearsxoil))
 
 
 
-                ax = self.dfMultOil.plot(figsize=(20,10),x_compat=True);
+                ax = dfMultOil.plot(figsize=(20,10),x_compat=True);
 
                 for year in yearsxoil:
                     plt.axvline(pd.Timestamp(str(year)),color='black',linewidth=1)
@@ -244,8 +244,8 @@ class wells:
                 ax.xaxis.set_minor_locator(months)
 
                 # round to nearest years.
-                datemin = np.datetime64(self.dfMultOil.index[0], 'Y')
-                datemax = np.datetime64(list(self.dfMultOil.index)[-2], 'Y') + np.timedelta64(1, 'Y')
+                datemin = np.datetime64(dfMultOil.index[0], 'Y')
+                datemax = np.datetime64(list(dfMultOil.index)[-2], 'Y') + np.timedelta64(1, 'Y')
                 ax.set_xlim(datemin, datemax)
 
                 ax.grid(axis='both', which='both')
@@ -253,7 +253,7 @@ class wells:
                 st.pyplot()
 
                 # months indexes
-                dfMultOilShifted = self.dfMultOil.copy()
+                dfMultOilShifted = dfMultOil.copy()
                 dfMultOilShifted = dfMultOilShifted.apply(lambda x: pd.Series(x.dropna().values))
 
                 # plot
@@ -283,6 +283,4 @@ class wells:
                 ax.grid(axis='both', which='both')
                 plt.savefig(final_directory + '/' + ' multiple fields oil rate month.png')
                 st.pyplot()
-
-    def return_filterd_fields(self):
-        return self.filtered_fields,self.choosen_filtered_fields
+        return filtered_fields,choosen_filtered_fields
