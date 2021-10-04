@@ -36,6 +36,8 @@ class group_plot:
             st.text('No data')
 
         dfMultOil = dfMultOil.pivot(index='Years', columns='Field', values='prfPrdOilGrossMillSm3')
+        st.text(filtered_fields)
+        st.text(choosen_filtered_fields)
         if choosen_filtered_fields != filtered_fields and len(choosen_filtered_fields) >= 1:
             if ('OIL' in userValues):
                 if uniteType_Oil == 'STB':
