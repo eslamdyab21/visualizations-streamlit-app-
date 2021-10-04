@@ -26,7 +26,7 @@ def get_binary_file_downloader_html(bin_file, file_label='File'):
     return href
 
 class group_plot:
-    def plot(self,userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids):
+    def plot(self,userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas):
         # =====================================MultiOil=======================================================
         if ('OIL' in userValues):
             if uniteType_Oil == 'STB':
@@ -196,7 +196,7 @@ class group_plot:
                     if xtime == 'yes':
                         for year in yearsx:
                             plt.axvline(pd.Timestamp(str(year)), color='black', linewidth=1)
-                        plot_multi_helper().plot_multi3(dft_new, userValuesclr, xtime, figsize=(25, 10));
+                        plot_multi_helper().plot_multi3(groupORindiv,uniteType_Gas,uniteType_Oil,dft_new, userValuesclr, xtime, figsize=(25, 10));
 
                         plt.title(str(userValue) + ' Field Production');
                         plt.savefig(final_directory + '/' + userValue + ' field production year multy.png')
@@ -205,7 +205,7 @@ class group_plot:
                         for tick in np.arange(0, dft_new.shape[0] + 1, 12):
                             plt.axvline(tick, color='black', linewidth=1)
 
-                        plot_multi_helper().plot_multi3(dft_new, userValuesclr, xtime, figsize=(25, 10));
+                        plot_multi_helper().plot_multi3(groupORindiv,uniteType_Gas,uniteType_Oil,dft_new, userValuesclr, xtime, figsize=(25, 10));
 
                         plt.title(str(userValue) + ' Field Production');
                         plt.savefig(final_directory + '/' + userValue + ' field production month multy.png')
