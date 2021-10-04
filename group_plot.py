@@ -8,12 +8,25 @@ from matplotlib.ticker import FixedLocator
 import streamlit as st
 import os
 import zipfile
+from plot_multi_helper import plot_multi_helper
 
-from app import zipdir, plotMult1, plot_multi3, plot_multi2, get_binary_file_downloader_html
 
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file))
+
+# download plots
+def get_binary_file_downloader_html(bin_file, file_label='File'):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    bin_str = base64.b64encode(data).decode()
+    href = f'<a href="data:application/octet-stream;base64,{bin_str}" download="{os.path.basename(bin_file)}">Download {file_label}</a>'
+    return href
 
 class group_plot:
-    def plot(self,userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx):
+    def plot(self,userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids):
         # =====================================MultiOil=======================================================
         if ('OIL' in userValues):
             if uniteType_Oil == 'STB':
@@ -87,11 +100,11 @@ class group_plot:
 
         if len(graphNum) != 1:
             # ploting with Fluid Production
-            plotMult1(df_new, dft_new, 'yes')
+            plot_multi_helper().plotMult1(df_new, dft_new, 'yes',graphNum,answer,mfluids,yearsx,userValues,userValue,final_directory,mcolors)
 
             # Trim Oil date Graph
             if ('OIL' in userValues):
-                plotMult1(df_new, dft_new, 'no')
+                plot_multi_helper().plotMult1(df_new, dft_new, 'no',graphNum,answer,mfluids,yearsx,userValues,userValue,final_directory,mcolors)
 
         def plotMult2(df_newcSUM, dftt_newcSUM, xtime):
             # ploting time with Fluid Production
@@ -183,7 +196,7 @@ class group_plot:
                     if xtime == 'yes':
                         for year in yearsx:
                             plt.axvline(pd.Timestamp(str(year)), color='black', linewidth=1)
-                        plot_multi3(dft_new, userValuesclr, xtime, figsize=(25, 10));
+                        plot_multi_helper().plot_multi3(dft_new, userValuesclr, xtime, figsize=(25, 10));
 
                         plt.title(str(userValue) + ' Field Production');
                         plt.savefig(final_directory + '/' + userValue + ' field production year multy.png')
@@ -192,7 +205,7 @@ class group_plot:
                         for tick in np.arange(0, dft_new.shape[0] + 1, 12):
                             plt.axvline(tick, color='black', linewidth=1)
 
-                        plot_multi3(dft_new, userValuesclr, xtime, figsize=(25, 10));
+                        plot_multi_helper().plot_multi3(dft_new, userValuesclr, xtime, figsize=(25, 10));
 
                         plt.title(str(userValue) + ' Field Production');
                         plt.savefig(final_directory + '/' + userValue + ' field production month multy.png')
@@ -214,7 +227,7 @@ class group_plot:
                     if xtime == 'yes':
                         for year in yearsx:
                             plt.axvline(pd.Timestamp(str(year)), color='black', linewidth=1)
-                        plot_multi2(dftt_newcSUM, userValuesclr, xtime, figsize=(25, 10));
+                        plot_multi_helper().plot_multi2(dftt_newcSUM, userValuesclr, xtime, figsize=(25, 10));
 
                         plt.title(str(userValue) + ' Field Cumulative Production');
                         plt.savefig(final_directory + '/' + userValue + ' field cumulative production year multy.png')
@@ -225,7 +238,7 @@ class group_plot:
                             plt.axvline(tick, color='black', linewidth=1)
 
                         # df_newcSUM.set_index('Time', inplace=True)
-                        plot_multi2(dftt_newcSUM, userValuesclr, xtime, figsize=(25, 10));
+                        plot_multi_helper().plot_multi2(dftt_newcSUM, userValuesclr, xtime, figsize=(25, 10));
 
                         plt.title(str(userValue) + ' Field Cumulative Production');
                         plt.savefig(final_directory + '/' + userValue + ' field cumulative production month multy.png')
