@@ -481,13 +481,19 @@ for fluid in mfluids:
 #===============================================================================================================================================================#
 
 
-if st.button('Plot Group Graphs'):
+if st.button('Plot Group Graphs - Years'):
     st.header('Group Graphs')
     groupORindiv = 'group'
     from group_plot import group_plot
-    group_plot().plot(userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
+    group_plot().plot('years',userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
     #===============================================================================================================================================================#
 
+if st.button('Plot Group Graphs - Months'):
+    st.header('Group Graphs')
+    groupORindiv = 'group'
+    from group_plot import group_plot
+    group_plot().plot('months',userValues,userValue,uniteType_Oil,graphNum,dfMultOil,final_directory,df_new,dft_new,answer,csumNames,mcolors,df_newcSUM,dftt_newcSUM,yearsx,mfluids,groupORindiv,uniteType_Gas)
+    #===============================================================================================================================================================#
 
 if (answer == 'individual' or answer =='both' or len(graphNum) ==1):
     lstdf = []
