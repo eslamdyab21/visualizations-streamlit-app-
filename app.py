@@ -14,7 +14,7 @@ from plot_multi_helper import plot_multi_helper
 st.set_page_config(layout="wide")
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
-
+plt.style.use('ggplot')
 
 
 @st.cache
